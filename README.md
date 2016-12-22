@@ -8,7 +8,7 @@ It is an electron/react app based on [https://github.com/chentsulin/electron-rea
 
 To run it, clone the repo, cd to it, and run 
 
-`npm run dev
+> npm run dev
 
 You will need npm and a bunch of node modules. If you install, please make a list of the dependencies so we can have them documented here, or better yet add them to package.json
 
