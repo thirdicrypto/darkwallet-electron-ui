@@ -1,11 +1,20 @@
 // @flow
-import { combineReducers } from 'redux';
+import { combineReducers, applyMiddleware } from 'redux';
+import { thunk } from 'redux-thunk'
 import { routerReducer as routing } from 'react-router-redux';
-import counter from './counter';
+import app from './app';
+import identities from './identities';
+import pockets from './pockets';
+import addresses from './addresses';
+import history from './history';
 
 const rootReducer = combineReducers({
-  counter,
-  routing
+  app,
+  identities,
+  pockets,
+  addresses,
+  history,
+  routing,
 });
 
 export default rootReducer;
