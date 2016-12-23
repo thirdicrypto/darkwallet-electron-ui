@@ -313,7 +313,7 @@ export default class DaemonInterface extends EventEmitter {
 
   handleBackup = (message) => {
 
-    alert("Backup: " + message.result.toString());
+    alert("Backup: \n\n" + message.result.join(" "));
   }
 
   /*************/

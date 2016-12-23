@@ -16,7 +16,6 @@ You will need npm and a bunch of node modules. If you install, please make a lis
 
 - Delete Pocket
 - Restore
-- Show backup button only for logged-in identity
 - Settings
 
 - Fix icons
@@ -24,9 +23,10 @@ You will need npm and a bunch of node modules. If you install, please make a lis
 - Try to open the websocket if it's not open
 - Show status of connection
 - Handle empty form fields
-- Confirm account and pocket deletes
+- Confirm pocket deletes
 - Don't close identities dropdown on account delete
 - active indicators on main tabs
+- Keep correct account active on delete
 
 - Daemon status, reset, launch
 - Daemon port

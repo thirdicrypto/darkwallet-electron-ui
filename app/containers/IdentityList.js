@@ -33,8 +33,10 @@ class IdentityList extends Component {
 
   handleDeleteIdentity = (e) => {
     e.preventDefault();
-    let identityName = e.target.getAttribute('data-name');
-    this.props.dwDaemonDeleteIdentity(identityName);
+    var identityName = e.target.getAttribute('data-name');
+    if(confirm("Are you sure you want to delete this identity?")) {
+      this.props.dwDaemonDeleteIdentity(identityName);
+    }
   }
 
   handleBackupIdentity = (e) => {

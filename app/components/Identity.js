@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { startLogin } from '../actions/identities';
 import Balance from './Balance';
 import IdentityLoginForm from './IdentityLoginForm';
+import IdentityButtons from './IdentityButtons';
 import './Identity.css';
 
  export default class Identity extends Component {
@@ -26,14 +27,10 @@ import './Identity.css';
     <h4>{this.props.name}</h4>
     <h6>Balance: <Balance balance={this.props.balance} /></h6>
     <IdentityLoginForm name={this.props.name} handleLogin={this.props.handleLogin} isCurrentIdentity={this.props.isCurrentIdentity} />
-    <div className="row collapse">
-      <div className="small-6 columns">
-        <button onClick={this.props.handleBackupIdentity} className="nomarginbottom small expand"><i className="icon-upload"></i> Backup</button>
-      </div>
-      <div className="small-6 columns">
-        <button onClick={this.props.handleDeleteIdentity} data-name={this.props.name} className="small expand alert nomarginbottom"><i className="icon-trash"></i> Delete</button>
-      </div>
-    </div>
+    <IdentityButtons isCurrentIdentity={this.props.isCurrentIdentity}
+      handleBackupIdentity={this.props.handleBackupIdentity}
+      handleDeleteIdentity={this.props.handleDeleteIdentity}
+      name={this.props.name} />
   </div>
 </li>
     )
