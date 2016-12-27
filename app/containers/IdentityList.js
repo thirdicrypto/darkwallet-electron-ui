@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Identity from '../components/Identity';
 import IdentityCreateForm from '../components/IdentityCreateForm';
+import IdentityRestoreForm from '../components/IdentityRestoreForm';
 
 class IdentityList extends Component {
   static propTypes = {
@@ -48,6 +49,10 @@ class IdentityList extends Component {
     this.setState({display: "createIdentity"});
   }
 
+  showRestoreForm = (e) => {
+    this.setState({display: "restoreIdentity"});
+  }
+
   showList = (e) => {
     this.setState({display: "listIdentities"});
   }
@@ -63,13 +68,22 @@ class IdentityList extends Component {
       )
     }
 
+    if(this.state.display == "restoreIdentity") {
+      return (
+        <div>
+          <IdentityRestoreForm />
+          <a onClick={this.showList} className="backButton button small radius alert"><i className="icon-plus"></i> Back to Identity List</a>
+        </div>
+      )
+    }
+
     return (
 <div className="scroller off-canvas-wrap" >
   <div className="row identityListActions">
     <div className="small-12 columns">
       <a onClick={this.showCreateForm} className="button small radius"><i className="icon-plus"></i> New wallet</a>
-      <a className="button radius small"><i className="icon-download"></i> Restore a backup</a>
-      <a className="button radius small"><i className="icon-upload"></i> Backup all wallets</a>
+      <a onClick={this.showRestoreForm} className="button radius small"><i className="icon-download"></i> Restore a backup</a>
+      {/*<a className="button radius small"><i className="icon-upload"></i> Backup all wallets</a>*/}
     </div>
   </div>
   <div className="row">

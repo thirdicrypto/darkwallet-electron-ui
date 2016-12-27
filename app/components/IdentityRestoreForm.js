@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-class IdentityCreate extends Component {
+class IdentityRestore extends Component {
   static propTypes = {
     dwDaemon: PropTypes.object.isRequired,
   }
@@ -11,15 +11,16 @@ class IdentityCreate extends Component {
   }
 
   componentDidMount() {
-    this.setState({dwDaemonCreateIdentity: this.props.dwDaemon.createIdentity});
+    this.setState({dwDaemonRestoreIdentity: this.props.dwDaemon.restoreIdentity});
   }
 
-  handleCreateIdentity = (e) => {
+  handleRestoreIdentity = (e) => {
     e.preventDefault();
     let identityName = e.target.querySelector('[name=identityName]').value;
     let password = e.target.querySelector('[name=password]').value;
     let passwordConfirm = e.target.querySelector('[name=passwordConfirm]').value;
     let useTestnet = e.target.querySelector('[name=testnet]').checked;
+    let brainwallet = e.target.querySelector('[name=brainwallet]').value;
 
     if(password !== passwordConfirm) {
       //TODO: Throw an error here
@@ -27,7 +28,7 @@ class IdentityCreate extends Component {
       return;
     }
 
-    this.state.dwDaemonCreateIdentity(identityName, password, useTestnet);
+    this.state.dwDaemonRestoreIdentity(identityName, password, brainwallet, useTestnet);
   }
 
 
@@ -38,11 +39,11 @@ class IdentityCreate extends Component {
   <div className="row collapse">
     <div className="large-10 large-centered columns cardflipper">
       <div className="wizard">
-        <form name="newIdentityForm" onSubmit={this.handleCreateIdentity}>
+        <form name="newIdentityForm" onSubmit={this.handleRestoreIdentity}>
           <div className="row">
             <div className="small-12 columns">
-              <h2>Create New Identity</h2>
-              <h6>Identities are accounts that keep track of your pockets and coins</h6>
+              <h2>Restore an Identity</h2>
+              <h6>Choose a name and password, then enter your 12 restore words.</h6>
             </div>
           </div>
           <div className="row">
@@ -60,6 +61,11 @@ class IdentityCreate extends Component {
               <input type="password" name="passwordConfirm" placeholder="Confirm your password..." />
             </div>
           </div>
+           <div className="row">
+            <div className="small-9 columns">
+              <input type="text" name="brainwallet" placeholder="Enter your restore words..." />
+            </div>
+          </div>
           <div className="row">
             <div className="small-9 columns">
               <input type="checkbox" name="testnet" /> Use Testnet (Practice before using real BTC)
@@ -67,7 +73,7 @@ class IdentityCreate extends Component {
           </div>
           <div className="row">
             <div className="small-9 columns">
-              <input type="submit" className="button small expand radius" value="Create" />
+              <input type="submit" className="button small expand radius" value="Restore" />
             </div>
           </div>
         </form>
@@ -91,4 +97,4 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(IdentityCreate);
+export default connect(mapStateToProps, mapDispatchToProps)(IdentityRestore);

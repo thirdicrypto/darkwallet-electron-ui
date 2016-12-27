@@ -12,10 +12,12 @@ To run it, clone the repo, cd to it, and run
 
 You will need npm and a bunch of node modules. If you install, please make a list of the dependencies so we can have them documented here, or better yet add them to package.json
 
+You will need node v6 (v4 is the default version on Ubuntu)
+
 ## TO DO:
 
 - Delete Pocket
-- Restore
+- Restore (partly complete)
 - Settings
 
 - Fix icons

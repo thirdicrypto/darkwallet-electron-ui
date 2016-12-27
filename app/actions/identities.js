@@ -16,13 +16,6 @@ export function setIdentities(identities) {
   }
 }
 
-export function createIdentity(name) {
-  return {
-    type: CREATE_IDENTITY,
-    name,
-  }
-}
-
 export function startLogin() {
   return {
     type: START_LOGIN,

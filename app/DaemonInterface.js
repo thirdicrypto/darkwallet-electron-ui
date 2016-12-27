@@ -106,6 +106,16 @@ export default class DaemonInterface extends EventEmitter {
     this.dwCreateAccount(identityName, password, useTestNet);
   }
 
+  restoreIdentity = (identityName, password, brainwallet, useTestNet) => {
+    this.emit('daemonMessage', {
+        name: "restoringIdentity",
+        type: "info",
+        text: "Restoring Identity...",
+    });
+    this.dwRestoreAccount(identityName, password, brainwallet, useTestNet);
+  }
+
+
   deleteIdentity = (identityName) => {
     this.dwDeleteAccount(identityName);
   }
@@ -143,6 +153,14 @@ export default class DaemonInterface extends EventEmitter {
           text: "Wrong password!",
         });
       }
+      if(message.error == "invalid_brainwallet"){
+        this.emit("daemonMessageDelete", "restoringIdentity");
+        this.emit("daemonMessage", {
+          name: "invalidBrainwallet",
+          type: "error",
+          text: "Invalid Brainwallet!",
+        });
+      }
       return;
     }
 
@@ -155,6 +173,8 @@ export default class DaemonInterface extends EventEmitter {
       case "dw_list_accounts" : this.handleListAccounts(message);
         break;
       case "dw_create_account" : this.handleCreateAccount(message);
+        break;
+      case "dw_restore_account" : this.handleRestoreAccount(message);
         break;
       case "dw_set_account" : this.handleSetAccount(message);
         break;
@@ -181,10 +201,10 @@ export default class DaemonInterface extends EventEmitter {
 
   handleListAccounts = (message) => {
     //Take list of accounts and turn them into a list of identities
-    //identities include a name and pockets and a balance
+    //identities include a name and a balance
     var accounts = message.result;
     this.identities.identitiesList = accounts[1].map((accountName, index) => {
-      //We want to see if we already know about this account to carry over the balance.
+      //TODO: We want to see if we already know about this account to carry over the balance.
       return {
         name: accountName,
         balance: -1,
@@ -207,8 +227,19 @@ export default class DaemonInterface extends EventEmitter {
     });
 
     this.emit("identitiesListReady", this.identities);
-    console.log(this.identities);
-  }
+  };
+
+  handleRestoreAccount = (message) => {
+    this.emit("daemonMessageDelete", "restoringIdentity");
+
+    this.identities.identitiesList.push({
+      name: this.pendingRequests[message.id].params[0],
+      balance: 0,
+      pockets: [],
+    });
+
+    this.emit("identitiesListReady", this.identities);
+  };
 
   handleSetAccount = (message) => {
     this.emit("daemonMessageDelete", "loggingIn");
@@ -229,7 +260,7 @@ export default class DaemonInterface extends EventEmitter {
     }
     this.emit("identitiesListReady", this.identities);
     console.log(this.identities);
-  }
+  };
 
   handleListPockets = (message) => {
     var pocketList = message.result[0]
@@ -327,7 +358,14 @@ export default class DaemonInterface extends EventEmitter {
       "params": [accountName, accountPassword, useTestNet]});
   }
 
-  dwRestoreAccount() {}
+  /* Restore wallet from Seed */
+  dwRestoreAccount(accountName, brainwallet, accountPassword, useTestNet) {
+    this.sendMessage({
+      "command":"dw_restore_account",
+      "id": this.generateTransactionId(),
+      "params": [accountName, brainwallet, accountPassword, useTestNet],
+    });
+  }
 
   dwSetAccount(accountName, accountPassword){
     this.sendMessage({
