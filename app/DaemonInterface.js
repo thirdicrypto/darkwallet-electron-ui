@@ -129,8 +129,8 @@ export default class DaemonInterface extends EventEmitter {
     this.dwCreatePocket(pocketName);
   }
 
-  sendCoins = (pocket, address, amount) => {
-    this.dwSend(pocket, address, amount);
+  sendCoins = (address, amount, pocket, fee) => {
+    this.dwSend(address, amount, pocket, fee);
   }
 
   backupIdentity = () => {
@@ -323,7 +323,7 @@ export default class DaemonInterface extends EventEmitter {
   }
 
   handleHistory = (message) => {
-    let history = message.result[0];
+    let history = message.result;
     let currentPocketName = this.pendingRequests[message.id].params[0];
     for(let id in this.pockets) {
       let pocket = this.pockets[id];
@@ -434,11 +434,11 @@ export default class DaemonInterface extends EventEmitter {
   dwDeletePocket(pocket){}
 
   /* Send Bitcoin */
-  dwSend(pocket, address, amount){
+  dwSend(address, amount, pocket, fee){
     this.sendMessage({
       "command": "dw_send",
       "id": this.generateTransactionId(),
-      "params": [pocket, [address, amount]],
+      "params": [{address , amount}, pocket, fee],
     });
   }
 

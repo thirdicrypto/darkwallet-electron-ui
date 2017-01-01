@@ -11,13 +11,13 @@ class PocketAddressList extends Component {
 		return (
 <div className="large-6 columns">
   <div className="panel radius">
-    <dl className="sub-nav">
+{/*    <dl className="sub-nav">
       <dt>Filter:</dt>
       <dd className="active"><a>Unused</a></dd>
       <dd><a>Labelled</a></dd>
       <dd><a>Top</a></dd>
       <dd><a>All</a></dd>
-    </dl>
+    </dl>*/}
     <ul id="address-actions" className="f-dropdown" >
       <li>
         <a className="fa fa-qrcode"> Show QR code</a>

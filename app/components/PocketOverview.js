@@ -5,7 +5,7 @@ import StealthAddress from './StealthAddress';
 export default class PocketOverview extends Component {
 	render() {
 		return (
-<div className="large-6 columns">
+<div className="columns">
   <SendFormSimple />
 
   <StealthAddress />

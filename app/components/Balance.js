@@ -26,7 +26,7 @@ export default class Balance extends Component {
   render() {
     return (
 <span className="dwBalance">
-  {this.state.balance} ฿
+  {this.state.balance} m฿
 </span>
     );
   }

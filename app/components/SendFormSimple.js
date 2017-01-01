@@ -14,7 +14,8 @@ class SendFormSimple extends Component {
     e.preventDefault();
     let address = e.target.querySelector('[name=sendAddress]').value;
     let amount = e.target.querySelector('[name=sendAmount]').value;
-    this.props.dwDaemonHandleSend(address, amount);
+    let fee = e.target.querySelector('[name=sendFee]').value;
+    this.props.dwDaemonHandleSend(address, amount, this.props.pocketName, fee);
   }
 
   render() {
@@ -23,17 +24,18 @@ class SendFormSimple extends Component {
   <form onSubmit={this.handleSend} name="sendFormSimple">
     <div className="row collapse">
       <h5>Send</h5>
-      <div className="small-1 columns">
+{/*      <div className="small-1 columns">
         <a href="" title="Select from Contacts" className="button square prefix"><i className="icon-contacts"></i></a>
         <a href="" title="Scan QR code" className="button square prefix"><i className="icon-qrcode"></i></a>
       </div>
       <div className="small-1 columns">
         <a className="button square"></a>
-      </div>
-      <div className="small-6 columns">
+      </div> */}
+      <div className="small-8 columns">
         <input type="hidden" name="pocket" value={this.props.pocketName} />
         <input type="text" name="sendAddress" placeholder="Send to address..." className="nomarginbottom" />
-        <input type="text" name="sendAmount" placeholder="Enter amount" className="nomarginbottom" />
+        <input type="text" name="sendAmount" placeholder="Amount in m฿..." className="nomarginbottom" />
+        <input type="text" name="sendFee" placeholder="Fee in m฿..." className="nomarginbottom" />
       </div>
       <div className="small-4 columns">
         <button type="submit" className="button postfix radius nomarginbottom" disabled="">Send</button>

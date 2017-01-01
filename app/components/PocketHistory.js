@@ -26,7 +26,7 @@ class PocketHistory extends Component {
   <div className="panel radius">
 		<div className="tab-scroller" >
       {this.props.history.map((item, i) => {
-        return <PocketHistoryItem key={i} item={item} />
+        return <PocketHistoryItem key={i} address={item.addr} value={item.value} spend={item.spend} type={item.type} output={item.output} />
       })}
     </div>
   </div>

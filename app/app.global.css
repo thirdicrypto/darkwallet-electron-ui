@@ -5515,7 +5515,7 @@ form.send {
 /* Quick Send Form */
 
 .sendFormSimple button {
-    height: 78px !important;
+    height: 117px !important;
 }
 
 /* Hackey Shit for when we refactor the old CSS */

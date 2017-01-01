@@ -17,19 +17,20 @@ You will need node v6 (v4 is the default version on Ubuntu)
 ## TO DO:
 
 - Delete Pocket
-- Restore (partly complete)
-- Settings
-
-- Fix icons
-- Start the daemon if it's not started
-- Try to open the websocket if it's not open
-- Show status of connection
-- Handle empty form fields
 - Confirm pocket deletes
+- Restore (in progress)
+- Send (in progress)
+- Settings?
+- Handle empty form fields
 - Don't close identities dropdown on account delete
 - active indicators on main tabs
 - Keep correct account active on delete
 
+- QR codes https://www.npmjs.com/package/qrcode.react
+- Fix icons?
+- Start the daemon if it's not started
+- Try to open the websocket if it's not open
+- Show status of connection
 - Daemon status, reset, launch
 - Daemon port
 

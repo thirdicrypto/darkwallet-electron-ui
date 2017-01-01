@@ -1,24 +1,30 @@
 import React, { Component, PropTypes } from 'react';
+import Balance from './Balance';
 
 export default class PocketHistoryItem extends Component {
   static propTypes = {
     item: PropTypes.object.isRequired,
+    address: PropTypes.string.isRequired,
+    value: PropTypes.number.isRequired,
+//    spend:
+    type: PropTypes.string.isRequired,
+    output: PropTypes.object.isRequired,
   }
 
   render() {
     return (
 <div className="row collapse address-row ">
-  <div className="small-4 columns ellipsis">
+  <div className="small-2 columns ellipsis">
     <a className="button square lefted"><i className="icon-chevron-circle-down"></i></a>
     <span className="address-label editable" >
     </span>
   </div>
 
-  <div className="small-6 columns ellipsis">
-    {this.props.item}
+  <div className="small-8 columns ellipsis">
+    {this.props.address}
   </div>
   <div className="small-2 columns text-right">
-     0 ฿
+     <Balance balance={this.props.value} />
   </div>
 </div>
     );
