@@ -16,15 +16,20 @@ You will need node v6 (v4 is the default version on Ubuntu)
 
 ## TO DO:
 
-- Delete Pocket
-- Confirm pocket deletes
+
+
 - Restore (in progress)
 - Send (in progress)
+- Verify address in send field
+- Sealth address
 - Settings?
 - Handle empty form fields
 - Don't close identities dropdown on account delete
 - active indicators on main tabs
 - Keep correct account active on delete
+- Delete Pocket
+- Confirm pocket deletes
+
 
 - QR codes https://www.npmjs.com/package/qrcode.react
 - Fix icons?
