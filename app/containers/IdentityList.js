@@ -8,6 +8,7 @@ class IdentityList extends Component {
   static propTypes = {
     identities: PropTypes.array.isRequired,
     currentIdentity: PropTypes.string,
+    toggleIdentitiesDropdown: PropTypes.func.isRequired,
     dwDaemonStartLogin : PropTypes.func.isRequired,
     dwDaemonDeleteIdentity: PropTypes.func.isRequired,
     dwDaemonBackupIdentity: PropTypes.func.isRequired,

@@ -39,7 +39,9 @@ class App extends Component {
     if(newProps.currentIdentity == null) {
       this.setState({showIdentitiesDropdown: true});
     } else {
-      this.setState({showIdentitiesDropdown: false});
+      if(this.props.currentIdentity != newProps.currentIdentity) {
+        this.setState({showIdentitiesDropdown: false});
+      }
     }
   }
 
@@ -97,7 +99,7 @@ class App extends Component {
           </section>
         </nav>
         <div id="identitiesDropdown" className={this.state.showIdentitiesDropdown? "navDropdown active" : "navDropdown"}>
-          <IdentityList />
+          <IdentityList toggleIdentitiesDropdown={this.toggleIdentitiesDropdown} />
         </div>
         {this.props.children}
       </div>

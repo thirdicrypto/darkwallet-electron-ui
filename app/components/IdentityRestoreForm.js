@@ -20,7 +20,7 @@ class IdentityRestore extends Component {
     let password = e.target.querySelector('[name=password]').value;
     let passwordConfirm = e.target.querySelector('[name=passwordConfirm]').value;
     let useTestnet = e.target.querySelector('[name=testnet]').checked;
-    let brainwallet = e.target.querySelector('[name=brainwallet]').value;
+    let brainwallet = e.target.querySelector('[name=brainwallet]').value.split(" ");
 
     if(password !== passwordConfirm) {
       //TODO: Throw an error here

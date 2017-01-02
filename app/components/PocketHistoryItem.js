@@ -3,10 +3,8 @@ import Balance from './Balance';
 
 export default class PocketHistoryItem extends Component {
   static propTypes = {
-    item: PropTypes.object.isRequired,
     address: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired,
-//    spend:
     type: PropTypes.string.isRequired,
     output: PropTypes.object.isRequired,
   }

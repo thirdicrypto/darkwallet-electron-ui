@@ -6,6 +6,7 @@ import app from './app';
 import identities from './identities';
 import pockets from './pockets';
 import addresses from './addresses';
+import stealthAddress from './stealthAddress';
 import history from './history';
 
 const rootReducer = combineReducers({
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   identities,
   pockets,
   addresses,
+  stealthAddress,
   history,
   routing,
 });

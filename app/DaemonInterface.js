@@ -70,7 +70,8 @@ export default class DaemonInterface extends EventEmitter {
       if(request.id != messageId && (
           request.command == "dw_receive" ||
           request.command == "dw_balance" ||
-          request.command == "dw_history" )
+          request.command == "dw_history" ||
+          request.command == "dw_stealth" )
         ) {
         return; //There are other pending pocket requests Don't emit an event.
       }
@@ -188,6 +189,8 @@ export default class DaemonInterface extends EventEmitter {
         break;
       case "dw_receive" : this.handleReceive(message);
         break;
+      case "dw_stealth" : this.handleStealth(message);
+        break;
       case "dw_history" : this.handleHistory(message);
         break;
       case "dw_send" : this.handleSendCoins(message);
@@ -274,6 +277,7 @@ export default class DaemonInterface extends EventEmitter {
       this.dwGetPocketBalance(pocketList[i]);
       this.dwGetPocketAddresses(pocketList[i]);
       this.dwGetPocketHistory(pocketList[i]);
+      this.dwGetPocketStealthAddress(pocketList[i])
       this.pockets[i] = {
         name: pocketList[i],
         balance: -1,
@@ -317,6 +321,18 @@ export default class DaemonInterface extends EventEmitter {
       let pocket = this.pockets[id];
       if(pocket.name == currentPocketName) {
         pocket.addresses = addresses;
+      }
+    }
+    this.shouldEmitPocketsReady(message.id);
+  }
+
+  handleStealth = (message) => {
+    let stealthAddress = message.result[0];
+    let currentPocketName = this.pendingRequests[message.id].params[0];
+    for(let id in this.pockets) {
+      let pocket = this.pockets[id];
+      if(pocket.name == currentPocketName) {
+        pocket.stealthAddress = stealthAddress;
       }
     }
     this.shouldEmitPocketsReady(message.id);
@@ -419,6 +435,14 @@ export default class DaemonInterface extends EventEmitter {
   dwGetPocketAddresses(pocket){
     this.sendMessage({
       "command": "dw_receive",
+      "id": this.generateTransactionId(),
+      "params": [pocket],
+    });
+  }
+
+  dwGetPocketStealthAddress(pocket) {
+    this.sendMessage({
+      "command": "dw_stealth",
       "id": this.generateTransactionId(),
       "params": [pocket],
     });
