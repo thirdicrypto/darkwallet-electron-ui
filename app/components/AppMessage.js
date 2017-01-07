@@ -7,9 +7,13 @@ export default class AppMessage extends Component {
     deleteAppMessage: PropTypes.func.isRequired,
   }
 
+  handleClick = () => {
+    this.props.deleteAppMessage(this.props.message.name);
+  }
+
   render() {
     return (
-      <li onClick={this.props.deleteAppMessage(this.props.message.type)} className={"appMessage appMessage-" + this.props.message.type}>{this.props.message.text}</li>
+      <li onClick={this.handleClick} className={"appMessage appMessage-" + this.props.message.type}>{this.props.message.text}</li>
     );
   }
 }
