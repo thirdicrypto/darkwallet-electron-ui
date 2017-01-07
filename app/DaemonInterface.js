@@ -43,6 +43,9 @@ export default class DaemonInterface extends EventEmitter {
   }
 
   sendMessage = (message) => { //Sends a message to the daemon
+    console.log("Sending Message to Daemon:");
+    console.log(message);
+
     if(this.wsOpen){
       this.pendingRequests[message.id] = (message);
       try {
