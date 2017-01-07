@@ -28,7 +28,7 @@ class IdentityRestore extends Component {
       return;
     }
 
-    this.state.dwDaemonRestoreIdentity(identityName, password, brainwallet, useTestnet);
+    this.state.dwDaemonRestoreIdentity(identityName, brainwallet, password, useTestnet);
   }
 
 

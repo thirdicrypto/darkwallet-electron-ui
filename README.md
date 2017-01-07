@@ -2,7 +2,7 @@
 
 This is a UI that runs on top of [https://github.com/rojavacrypto/launderwallet](https://github.com/rojavacrypto/launderwallet)
 
-It is a re-build of the original Dark Wallet chrome plug-in
+It is a re-build of the original Dark Wallet chrome plug-in and borrows most of the CSS and some of the HTML.
 
 It is an electron/react app based on [https://github.com/chentsulin/electron-react-boilerplate](https://github.com/chentsulin/electron-react-boilerplate)
 
@@ -10,26 +10,28 @@ To run it, clone the repo, cd to it, and run
 
 > npm run dev
 
-You will need npm and a bunch of node modules. If you install, please make a list of the dependencies so we can have them documented here, or better yet add them to package.json
+You will need npm and a bunch of node modules.
 
 You will need node v6 (v4 is the default version on Ubuntu)
 
+## KNOWN ISSUES:
+
+- Single history object breaks history page
+
 ## TO DO:
 
-
-
-- Restore (in progress)
+- Get more addresses
 - Send (in progress)
 - Verify address in send field
-- Sealth address
 - Settings?
-- Handle empty form fields
+- Handle empty/invalid form fields
 - Don't close identities dropdown on account delete
 - active indicators on main tabs
 - Keep correct account active on delete
 - Delete Pocket
 - Confirm pocket deletes
 
+- heartbeat / polling
 
 - QR codes https://www.npmjs.com/package/qrcode.react
 - Fix icons?
@@ -38,6 +40,10 @@ You will need node v6 (v4 is the default version on Ubuntu)
 - Show status of connection
 - Daemon status, reset, launch
 - Daemon port
+- Check for password matching as you type
+- Better notification behavior
+
+- Themes?
 
 - Tests
 - Move UI logic to dedicated containers and markup to components

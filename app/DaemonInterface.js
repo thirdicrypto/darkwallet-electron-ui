@@ -99,6 +99,7 @@ export default class DaemonInterface extends EventEmitter {
   };
 
   createIdentity = (identityName, password, useTestNet) => {
+    this.emit("daemonMessageDelete", "passwordMismatch");
     this.emit('daemonMessage', {
         name: "creatingIdentity",
         type: "info",
@@ -160,6 +161,14 @@ export default class DaemonInterface extends EventEmitter {
           name: "invalidBrainwallet",
           type: "error",
           text: "Invalid Brainwallet!",
+        });
+      }
+      if(message.error =="passwords do not match"){
+        this.emit("daemonMessageDelete", "creatingIdentity");
+        this.emit("daemonMessage", {
+          name: "passwordMismatch",
+          type: "error",
+          text: "Passwords do not match!",
         });
       }
       return;
@@ -304,12 +313,12 @@ export default class DaemonInterface extends EventEmitter {
   handleCreatePocket = (message) => {
     this.emit("daemonMessageDelete", "creatingPocket");
 
-    this.pockets.push({
+/*    this.pockets.push({
       name: this.pendingRequests[message.id].params[0],
       balance: 0,
       addresses: [],
       history: [],
-    });
+    }); */
 
     this.dwGetPockets();
   };
@@ -462,7 +471,7 @@ export default class DaemonInterface extends EventEmitter {
     this.sendMessage({
       "command": "dw_send",
       "id": this.generateTransactionId(),
-      "params": [{address , amount}, pocket, fee],
+      "params": [[[address , parseInt(amount)]], pocket, parseInt(fee)],
     });
   }
 
