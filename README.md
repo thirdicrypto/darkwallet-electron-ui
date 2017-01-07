@@ -21,7 +21,6 @@ You will need node v6 (v4 is the default version on Ubuntu)
 ## TO DO:
 
 - Send (in progress)
-- Show recipient address type visually somehow
 - Settings?
 - Handle empty/invalid form fields
 - Don't close identities dropdown on account delete
