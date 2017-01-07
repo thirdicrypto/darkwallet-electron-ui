@@ -18,7 +18,7 @@ class StealthAddress extends Component {
     Icon
   </div>*/}
     <div className="small-12 columns">
-      <input type="text" className="prefix radius nomarginbottom" value={this.props.stealthAddress} />
+      <input type="text" readOnly="true" className="prefix radius nomarginbottom" value={this.props.stealthAddress} />
     </div>
 {/*    <div className="small-1 columns">
       <a href="" className="button prefix square icon-copy"></a>

@@ -53,14 +53,19 @@ export default class DaemonInterface extends EventEmitter {
           this.emit("daemonMessage", {
             name: "daemonDisconnected",
             type: "error",
-            text: "Disconnected",
+            text: "Disconnected (try ctrl+r)",
           });
           this.emit("deleteDaemonMessage", "loggingIn");
         }
       }
     } else {
-      //TODO: Throw an error
+      //TODO: Throw an error / restart the daemon
       console.log("WebSocket Not Open Yet!");
+      this.emit("daemonMessage", {
+        name: "daemonDisconnected",
+        type: "error",
+        text: "Disconnected (try ctrl+r)",
+      });
     }
   };
 
@@ -131,6 +136,10 @@ export default class DaemonInterface extends EventEmitter {
     this.dwCreatePocket(pocketName);
   }
 
+  validateAddress = (address) => {
+    this.dwValidateAddress(address);
+  }
+
   sendCoins = (address, amount, pocket, fee) => {
     this.dwSend(address, amount, pocket, fee);
   }
@@ -197,6 +206,8 @@ export default class DaemonInterface extends EventEmitter {
       case "dw_create_pocket" : this.handleCreatePocket(message);
         break;
       case "dw_receive" : this.handleReceive(message);
+        break;
+      case "dw_validate_address" : this.handleValidate(message);
         break;
       case "dw_stealth" : this.handleStealth(message);
         break;
@@ -335,6 +346,14 @@ export default class DaemonInterface extends EventEmitter {
     this.shouldEmitPocketsReady(message.id);
   }
 
+  handleValidate = (message) => {
+    if(message.result[0] != "invalid") {
+      this.emit("validAddress", message.result[0]);
+      return;
+    }
+    this.emit("invalidAddress");
+  }
+
   handleStealth = (message) => {
     let stealthAddress = message.result[0];
     let currentPocketName = this.pendingRequests[message.id].params[0];
@@ -368,7 +387,7 @@ export default class DaemonInterface extends EventEmitter {
   }
 
   handleBackup = (message) => {
-
+    // best function in here
     alert("Backup: \n\n" + message.result.join(" "));
   }
 
@@ -446,6 +465,14 @@ export default class DaemonInterface extends EventEmitter {
       "command": "dw_receive",
       "id": this.generateTransactionId(),
       "params": [pocket],
+    });
+  }
+
+  dwValidateAddress(address){
+    this.sendMessage({
+      "command": "dw_validate_address",
+      "id": this.generateTransactionId(),
+      "params": [address],
     });
   }
 

@@ -8,6 +8,72 @@ class SendFormSimple extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      addressIsValid: false,
+      amountIsValid: false,
+      feeIsValid: false,
+      fieldsAreValid: false,
+    };
+  }
+
+  componentDidMount() {
+    this.handleDaemonEvents();
+  }
+
+  componentDidUpdate() {
+    if(this.state.fieldsAreValid != this.fieldsAreValid()) {
+      this.setState({fieldsAreValid: this.fieldsAreValid()})
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.dwDaemon.removeAllListeners("validAddress")
+    this.props.dwDaemon.removeAllListeners("invalidAddress")
+  }
+
+  handleDaemonEvents = () => {
+    this.props.dwDaemon.on("validAddress", (type) => {
+      this.setState({addressIsValid: true});
+      this.setState({addressType: type});
+    });
+    this.props.dwDaemon.on("invalidAddress", () => {
+      this.setState({addressIsValid: false});
+      this.setState({addressType: ""});
+    });
+  }
+
+  handleAddressChange = (e) => {
+    e.preventDefault();
+    let address = e.target.value;
+    this.props.dwDaemonValidateAddress(address);
+  }
+
+  handleAmountChange = (e) => {
+    e.preventDefault();
+    if(this.isInteger(e.target.value)){
+      this.setState({amountIsValid: true});
+    } else {
+      this.setState({amountIsValid: false});
+    }
+  }
+
+  handleFeeChange = (e) => {
+    e.preventDefault()
+    if(this.isInteger(e.target.value)){
+      this.setState({feeIsValid: true});
+    } else {
+      this.setState({feeIsValid: false});
+    }
+  }
+
+  isInteger = (value) => {
+    return (!isNaN(value) &&
+            parseInt(Number(value)) == value &&
+            !isNaN(parseInt(value, 10)))
+  }
+
+  fieldsAreValid = () => {
+    return (this.state.addressIsValid && this.state.amountIsValid && this.state.feeIsValid);
   }
 
   handleSend = (e) => {
@@ -33,12 +99,12 @@ class SendFormSimple extends Component {
       </div> */}
       <div className="small-8 columns">
         <input type="hidden" name="pocket" value={this.props.pocketName} />
-        <input type="text" name="sendAddress" placeholder="Send to address..." className="nomarginbottom" />
-        <input type="text" name="sendAmount" placeholder="Amount in m฿..." className="nomarginbottom" />
-        <input type="text" name="sendFee" placeholder="Fee in m฿..." className="nomarginbottom" />
+        <input onChange={this.handleAddressChange} type="text" name="sendAddress" placeholder="Send to address..." className="nomarginbottom" />
+        <input onChange={this.handleAmountChange} type="text" name="sendAmount" placeholder="Amount in m฿..." className="nomarginbottom" />
+        <input onChange={this.handleFeeChange} type="text" name="sendFee" placeholder="Fee in m฿..." className="nomarginbottom" />
       </div>
       <div className="small-4 columns">
-        <button type="submit" className="button postfix radius nomarginbottom" disabled="">Send</button>
+        <button type="submit" className={(this.state.fieldsAreValid ? "" : "disabled ") + "button postfix radius nomarginbottom"} disabled={!this.state.fieldsAreValid}>Send</button>
       </div>
     </div>
   </form>
@@ -50,7 +116,9 @@ class SendFormSimple extends Component {
 function mapStateToProps(state) {
   return {
     pocketName: state.pockets.currentPocket,
+    dwDaemon: state.app.dwDaemon,
     dwDaemonHandleSend: state.app.dwDaemon.sendCoins,
+    dwDaemonValidateAddress: state.app.dwDaemon.validateAddress,
   }
 }
 

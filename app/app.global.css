@@ -5518,6 +5518,10 @@ form.send {
     height: 117px !important;
 }
 
+input[readonly] {
+  background-color: #565656 !important;
+}
+
 /* Hackey Shit for when we refactor the old CSS */
 
 /* Always show the sidebar */

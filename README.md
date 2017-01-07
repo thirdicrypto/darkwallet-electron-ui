@@ -20,9 +20,10 @@ You will need node v6 (v4 is the default version on Ubuntu)
 
 ## TO DO:
 
+- Click appMessages to dismiss them.
 - Get more addresses
 - Send (in progress)
-- Verify address in send field
+- Show recipient address type visually somehow
 - Settings?
 - Handle empty/invalid form fields
 - Don't close identities dropdown on account delete
