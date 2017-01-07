@@ -82,7 +82,7 @@ class App extends Component {
               <h1><a><img id="logo" className={this.state.busy ? "busy" : ""} width="32" height="32" src="../resources/images/logo.svg" /> Darkwallet</a></h1>
             </li>
           </ul>
-          <AppMessageList appMessages={this.props.appMessages}/>
+          <AppMessageList deleteAppMessage={this.props.deleteAppMessage} appMessages={this.props.appMessages}/>
           <section className="top-bar-section">
             <ul className="right">
               {/*<li title="Gateway: ok" ><i className="icon-chain-broken"></i></li> */}
@@ -113,7 +113,6 @@ function mapStateToProps(state) {
     currentIdentity: state.identities.currentIdentity,
     appMessages: state.app.appMessages,
     currentPocket: state.pockets.currentPocket,
-
   }
 }
 

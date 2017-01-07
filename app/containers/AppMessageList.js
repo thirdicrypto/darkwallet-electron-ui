@@ -5,6 +5,7 @@ import AppMessage from '../components/AppMessage';
 export default class AppMessageList extends Component {
   static propTypes = {
     appMessages: PropTypes.array.isRequired,
+    deleteAppMessage: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -15,7 +16,7 @@ export default class AppMessageList extends Component {
     return (
       <ul className="appMessageList">
         {this.props.appMessages.map((message, i) => {
-          return <AppMessage message={message} key={i}/>
+          return <AppMessage deleteAppMessage={this.props.deleteAppMessage} message={message} key={i}/>
         })}
       </ul>
     );
