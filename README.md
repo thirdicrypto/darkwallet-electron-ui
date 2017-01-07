@@ -16,12 +16,10 @@ You will need node v6 (v4 is the default version on Ubuntu)
 
 ## KNOWN ISSUES:
 
-- Single history object breaks history page
+- Single history object breaks history page?
 
 ## TO DO:
 
-- Click appMessages to dismiss them.
-- Get more addresses
 - Send (in progress)
 - Show recipient address type visually somehow
 - Settings?

@@ -144,6 +144,12 @@ export default class DaemonInterface extends EventEmitter {
   }
 
   sendCoins = (address, amount, pocket, fee) => {
+    this.emit("daemonMessageDelete", "notEnoughFunds");
+    this.emit('daemonMessage', {
+        name: "sendingCoins",
+        type: "info",
+        text: "Sending Coins...",
+    });
     this.dwSend(address, amount, pocket, fee);
   }
 
@@ -181,6 +187,14 @@ export default class DaemonInterface extends EventEmitter {
           name: "passwordMismatch",
           type: "error",
           text: "Passwords do not match!",
+        });
+      }
+      if(message.error =="not_enough_funds"){
+        this.emit("daemonMessageDelete", "sendingCoins");
+        this.emit("daemonMessage", {
+          name: "notEnoughFunds",
+          type: "error",
+          text: "Not Enough Funds",
         });
       }
       return;
@@ -386,7 +400,7 @@ export default class DaemonInterface extends EventEmitter {
   }
 
   handleSendCoins = (message) => {
-    // what do we do to handle this?
+    this.emit("daemonMessageDelete", "sendingCoins");
   }
 
   handleBackup = (message) => {
