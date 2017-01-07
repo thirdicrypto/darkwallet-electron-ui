@@ -104,7 +104,7 @@ class SendFormSimple extends Component {
         <input onChange={this.handleFeeChange} type="text" name="sendFee" placeholder="Fee in m฿..." className="nomarginbottom" />
       </div>
       <div className="small-4 columns">
-        <button type="submit" className={(this.state.fieldsAreValid ? "" : "disabled ") + "button postfix radius nomarginbottom"} disabled={!this.state.fieldsAreValid}>Send</button>
+        <button type="submit" className={this.state.addressType + " " + (this.state.fieldsAreValid ? "" : "disabled ") + "button postfix radius nomarginbottom"} disabled={!this.state.fieldsAreValid}>Send</button>
       </div>
     </div>
   </form>

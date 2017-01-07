@@ -5522,6 +5522,14 @@ input[readonly] {
   background-color: #565656 !important;
 }
 
+button.stealth {
+  background-color: rgba(146, 30, 190, 0.9) !important;
+}
+
+button[disabled].stealth {
+  background-color: rgba(146, 30, 190, 0.9) !important;
+}
+
 /* Hackey Shit for when we refactor the old CSS */
 
 /* Always show the sidebar */
