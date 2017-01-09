@@ -136,7 +136,9 @@
   },
   "dependencies": {
     "electron-debug": "^1.0.1",
+    "eslint-plugin-import": "^2.2.0",
     "font-awesome": "^4.7.0",
+    "immutability-helper": "^2.1.1",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-redux": "^4.4.5",
@@ -144,7 +146,8 @@
     "react-router-redux": "^4.0.6",
     "redux": "^3.6.0",
     "redux-thunk": "^2.1.0",
-    "source-map-support": "^0.4.6"
+    "source-map-support": "^0.4.6",
+    "ws": "^1.1.1"
   },
   "devEngines": {
     "node": ">=6.x",

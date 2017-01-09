@@ -6,7 +6,11 @@ It is a re-build of the original Dark Wallet chrome plug-in and borrows most of 
 
 It is an electron/react app based on [https://github.com/chentsulin/electron-react-boilerplate](https://github.com/chentsulin/electron-react-boilerplate)
 
-To run it, clone the repo, cd to it, and run 
+To run it, clone the repo, cd to it, and run
+
+> npm install
+
+This should install all required node modules.
 
 > npm run dev
 
@@ -28,6 +32,7 @@ You will need node v6 (v4 is the default version on Ubuntu)
 - Keep correct account active on delete
 - Delete Pocket
 - Confirm pocket deletes
+- Clear name field on pocket create
 
 - heartbeat / polling
 
