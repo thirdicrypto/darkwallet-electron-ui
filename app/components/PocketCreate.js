@@ -9,6 +9,7 @@ class PocketCreate extends Component {
 
   constructor(props) {
     super(props);
+    let newPocketForm = null;
   }
 
   componentDidMount() {
@@ -22,6 +23,7 @@ class PocketCreate extends Component {
       alert("Pocket name not allowed: " + pocketName);
       return;
     }
+    newPocketForm.reset();
     this.state.dwDaemonCreatePocket(pocketName);
   }
 
@@ -33,7 +35,7 @@ class PocketCreate extends Component {
   <div className="row collapse">
     <div className="large-10 large-centered columns cardflipper">
       <div className="wizard">
-        <form name="newPocketForm" onSubmit={this.handleCreatePocket}>
+        <form name="newPocketForm" ref="newPocketForm" onSubmit={this.handleCreatePocket}>
           <div className="row">
             <div className="small-12 columns">
               <h6>Pockets allow organizing your wallet in different privacy zones</h6>

@@ -24,8 +24,8 @@ You will need node v6 (v4 is the default version on Ubuntu)
 
 ## TO DO:
 
-- Send (in progress)
-- Settings?
+- heartbeat / polling
+
 - Handle empty/invalid form fields
 - Don't close identities dropdown on account delete
 - active indicators on main tabs
@@ -34,8 +34,6 @@ You will need node v6 (v4 is the default version on Ubuntu)
 - Confirm pocket deletes
 - Clear name field on pocket create
 
-- heartbeat / polling
-
 - QR codes https://www.npmjs.com/package/qrcode.react
 - Fix icons?
 - Start the daemon if it's not started
@@ -43,6 +41,7 @@ You will need node v6 (v4 is the default version on Ubuntu)
 - Show status of connection
 - Daemon status, reset, launch
 - Daemon port
+- Settings?
 - Check for password matching as you type
 - Better notification behavior
 

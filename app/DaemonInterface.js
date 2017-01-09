@@ -341,13 +341,6 @@ export default class DaemonInterface extends EventEmitter {
   handleCreatePocket = (message) => {
     this.emit("daemonMessageDelete", "creatingPocket");
 
-/*    this.pockets.push({
-      name: this.pendingRequests[message.id].params[0],
-      balance: 0,
-      addresses: [],
-      history: [],
-    }); */
-
     this.dwGetPockets();
   };
 
@@ -401,6 +394,7 @@ export default class DaemonInterface extends EventEmitter {
 
   handleSendCoins = (message) => {
     this.emit("daemonMessageDelete", "sendingCoins");
+    this.emit("sendCoinsComplete");
   }
 
   handleBackup = (message) => {

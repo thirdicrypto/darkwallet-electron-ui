@@ -14,6 +14,7 @@ class SendFormSimple extends Component {
       feeIsValid: false,
       fieldsAreValid: false,
     };
+    let sendFormSimple = null;
   }
 
   componentDidMount() {
@@ -39,6 +40,9 @@ class SendFormSimple extends Component {
     this.props.dwDaemon.on("invalidAddress", () => {
       this.setState({addressIsValid: false});
       this.setState({addressType: ""});
+    });
+    this.props.dwDaemon.on("sendCoinsComplete", () => {
+      this.clearFields();
     });
   }
 
@@ -76,6 +80,10 @@ class SendFormSimple extends Component {
     return (this.state.addressIsValid && this.state.amountIsValid && this.state.feeIsValid);
   }
 
+  clearFields = () => {
+    sendFormSimple.reset();
+  }
+
   handleSend = (e) => {
     e.preventDefault();
     let address = e.target.querySelector('[name=sendAddress]').value;
@@ -87,7 +95,7 @@ class SendFormSimple extends Component {
   render() {
     return (
 <div className="panel radius sendFormSimple">
-  <form onSubmit={this.handleSend} name="sendFormSimple">
+  <form onSubmit={this.handleSend} ref="sendFormSimple" name="sendFormSimple">
     <div className="row collapse">
       <h5>Send</h5>
 {/*      <div className="small-1 columns">
@@ -99,9 +107,9 @@ class SendFormSimple extends Component {
       </div> */}
       <div className="small-8 columns">
         <input type="hidden" name="pocket" value={this.props.pocketName} />
-        <input onChange={this.handleAddressChange} type="text" name="sendAddress" placeholder="Send to address..." className="nomarginbottom" />
-        <input onChange={this.handleAmountChange} type="text" name="sendAmount" placeholder="Amount in m฿..." className="nomarginbottom" />
-        <input onChange={this.handleFeeChange} type="text" name="sendFee" placeholder="Fee in m฿..." className="nomarginbottom" />
+        <input onChange={this.handleAddressChange} key={this.state.timestamp} type="text" name="sendAddress" placeholder="Send to address..." className="nomarginbottom" />
+        <input onChange={this.handleAmountChange} key={this.state.timestamp} type="text" name="sendAmount" placeholder="Amount in m฿..." className="nomarginbottom" />
+        <input onChange={this.handleFeeChange} key={this.state.timestamp} type="text" name="sendFee" placeholder="Fee in m฿..." className="nomarginbottom" />
       </div>
       <div className="small-4 columns">
         <button type="submit" className={this.state.addressType + " " + (this.state.fieldsAreValid ? "" : "disabled ") + "button postfix radius nomarginbottom"} disabled={!this.state.fieldsAreValid}>Send</button>
@@ -128,7 +136,3 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SendFormSimple);
-
-
-
-
