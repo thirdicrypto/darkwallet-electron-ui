@@ -9,7 +9,7 @@ class PocketAddressList extends Component {
 
 	render() {
 		return (
-<div className="large-6 columns">
+<div className="large-6 columns pocketAddressList">
   <div className="panel radius">
 {/*    <dl className="sub-nav">
       <dt>Filter:</dt>

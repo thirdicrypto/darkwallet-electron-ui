@@ -34,7 +34,6 @@ export function handleNewPockets(pockets) {
     }
     console.log(newPockets);
     dispatch(setPockets(newPockets)); //Update the current pockets
-    dispatch(handleSetCurrentPocket(newPockets[0].name)); //Set the default Pocket as the first
     dispatch(setIdentities(newIdentities)); //Update Identities with new balance info
     dispatch(setCurrentBalance(newBalance)); //Update currentBalance
   }
@@ -81,4 +80,3 @@ export function setCurrentPocket(pocketName) {
     pocketName,
   }
 }
-

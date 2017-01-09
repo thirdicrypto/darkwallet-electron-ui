@@ -13,6 +13,16 @@ class PocketDetails extends Component {
       return null;
     }
 
+    if(this.props.pocketName == "") {
+      return (
+<div className="scroller off-canvas-wrap">
+  <div className="emptyComponentMessage">
+    <h2> Select a pocket from the list. </h2>
+  </div>
+</div>
+      )
+    }
+
     return(
 <div>
   <div className="tabbable totheleft">
@@ -51,7 +61,3 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PocketDetails);
-
-
-
-

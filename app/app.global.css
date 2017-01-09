@@ -5530,6 +5530,11 @@ button[disabled].stealth {
   background-color: rgba(146, 30, 190, 0.9) !important;
 }
 
+/* Pocket details  visual cleanup */
+.pocketAddressList [class*="column"] + [class*="column"]:last-child {
+    float: none;
+}
+
 /* Hackey Shit for when we refactor the old CSS */
 
 /* Always show the sidebar */
@@ -5539,4 +5544,3 @@ button[disabled].stealth {
   padding-right: 15.625rem;
   border-top: 1px solid rgba(34,34,34,1);
 }
-

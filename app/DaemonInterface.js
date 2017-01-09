@@ -11,8 +11,10 @@ export default class DaemonInterface extends EventEmitter {
     this.ws = new WebSocket('ws://localhost:8888');
     this.wsOpen = false;
     this.useTestNet = true;
+    this.pollingInterval = null;
     this.identities = []; // looks like this: [currentIdentity, [list, of, identities]]
     this.pockets = []; //Only remember the pockets of the current identity.
+    this.previousPockets = ""; //For comparing when doing polling. It is a JSON.stringify'd version of pockets.
     this.pendingRequests = []; //Requests sent to the daemon to be handled on message
   }
 
@@ -34,17 +36,29 @@ export default class DaemonInterface extends EventEmitter {
       // Handle the message (show success or failure message in the UI, etc)
       let message = JSON.parse(data);
       this.handleDaemonMessage(message);
-      console.log(message.id);
       delete this.pendingRequests[message.id]; //Remove the request from the pending array
-      console.log(this.pendingRequests);
     });
+
+    this.pollingInterval = window.setInterval(this.pollDaemon, 5000);
 
     console.log("DaemonInterface init complete")
   }
 
+  pollDaemon = () => {
+    console.log("Polling Daemon");
+    if(this.identities === [] || this.pockets === []) {
+      return; //Wait for initial load before polling
+    }
+    if(this.wsOpen) {
+      this.dwGetPockets();
+    } else {
+      //do kick the websocket - maybe jsut call init?
+    }
+  }
+
   sendMessage = (message) => { //Sends a message to the daemon
-    console.log("Sending Message to Daemon:");
-    console.log(message);
+//    console.log("Sending Message to Daemon:");
+//    console.log(message);
 
     if(this.wsOpen){
       this.pendingRequests[message.id] = (message);
@@ -84,7 +98,12 @@ export default class DaemonInterface extends EventEmitter {
         return; //There are other pending pocket requests Don't emit an event.
       }
     }
-    //This was the last pocket-related query request. Emit a ready event.
+
+    if(this.previousPockets === JSON.stringify(this.pockets)) {
+        return; //There were no changes to the pockets since the last request.
+    }
+
+    //This was the last pocket-related query request and there was a change. Emit a ready event.
     this.emit("pocketsListReady", this.pockets);
   }
 
@@ -202,7 +221,6 @@ export default class DaemonInterface extends EventEmitter {
 
     if(typeof this.pendingRequests[message.id] == "undefined" || this.pendingRequests[message.id].command == "undefined") {
       console.log("Error handling message " + message.id);
-      console.log(this.pendingRequests);
     }
 
     switch(this.pendingRequests[message.id].command) {
@@ -314,14 +332,15 @@ export default class DaemonInterface extends EventEmitter {
       this.dwGetPocketBalance(pocketList[i]);
       this.dwGetPocketAddresses(pocketList[i]);
       this.dwGetPocketHistory(pocketList[i]);
-      this.dwGetPocketStealthAddress(pocketList[i])
-      this.pockets[i] = {
-        name: pocketList[i],
-        balance: -1,
-        addresses: [],
+      this.dwGetPocketStealthAddress(pocketList[i]);
+      if(typeof this.pockets[i] === "undefined") {
+        this.pockets[i] = {
+          name: pocketList[i],
+          balance: -1,
+          addresses: [],
+        }
       }
     }
-    this.emit("pocketsListReady", this.pockets)
   };
 
   handleBalance = (message) => {
@@ -340,7 +359,6 @@ export default class DaemonInterface extends EventEmitter {
 
   handleCreatePocket = (message) => {
     this.emit("daemonMessageDelete", "creatingPocket");
-
     this.dwGetPockets();
   };
 
@@ -456,6 +474,7 @@ export default class DaemonInterface extends EventEmitter {
   }
 
   dwGetPockets(){
+    this.previousPockets = JSON.stringify(this.pockets);
     this.sendMessage({
       "command": "dw_list_pockets",
       "id": this.generateTransactionId(),

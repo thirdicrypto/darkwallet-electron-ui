@@ -2,7 +2,7 @@ import { SET_POCKETS, SET_CURRENT_POCKET, SET_POCKET_ADDRESSES } from '../action
 
 const initialState = {
   pockets: [],
-  currentPocket: "none",
+  currentPocket: "",
 };
 
 export default (state = initialState, action) => {

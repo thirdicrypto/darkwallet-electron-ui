@@ -20,11 +20,9 @@ You will need node v6 (v4 is the default version on Ubuntu)
 
 ## KNOWN ISSUES:
 
-- Single history object breaks history page?
+- Need to verify send works
 
 ## TO DO:
-
-- heartbeat / polling
 
 - Handle empty/invalid form fields
 - Don't close identities dropdown on account delete
@@ -32,7 +30,6 @@ You will need node v6 (v4 is the default version on Ubuntu)
 - Keep correct account active on delete
 - Delete Pocket
 - Confirm pocket deletes
-- Clear name field on pocket create
 
 - QR codes https://www.npmjs.com/package/qrcode.react
 - Fix icons?

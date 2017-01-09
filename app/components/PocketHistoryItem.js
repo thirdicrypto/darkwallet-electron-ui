@@ -12,7 +12,7 @@ export default class PocketHistoryItem extends Component {
   render() {
     return (
 <div className="row collapse address-row ">
-  <div className="small-2 columns ellipsis">
+  <div className="small-1 columns ellipsis">
     <a className="button square lefted"><i className="icon-chevron-circle-down"></i></a>
     <span className="address-label editable" >
     </span>
@@ -21,7 +21,7 @@ export default class PocketHistoryItem extends Component {
   <div className="small-8 columns ellipsis">
     {this.props.address}
   </div>
-  <div className="small-2 columns text-right">
+  <div className="small-3 columns text-right">
      <Balance balance={this.props.value} />
   </div>
 </div>
