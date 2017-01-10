@@ -23,7 +23,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.handleDaemonEvents();
-    this.props.dwDaemon.init();
+    //this.props.dwDaemon.init();
   }
 
   componentWillMount() {
@@ -59,12 +59,12 @@ class App extends Component {
       console.log("Daemon Event: pocketsListReady");
       this.props.handleNewPockets(pockets);
     });
-    this.props.dwDaemon.on("daemonMessage", (message) => {
-      console.log("Daemon Event: daemonMessage");
+    this.props.dwDaemon.on("appMessage", (message) => {
+      console.log("Daemon Event: appMessage");
       this.props.createAppMessage(message);
     });
-    this.props.dwDaemon.on("daemonMessageDelete", (message) => {
-      console.log("Daemon Event: daemonMessageDelete");
+    this.props.dwDaemon.on("appMessageDelete", (message) => {
+      console.log("Daemon Event: appMessageDelete");
       this.props.deleteAppMessage(message);
     });
   }

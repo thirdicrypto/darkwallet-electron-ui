@@ -22,8 +22,8 @@ import './Identity.css';
 
   render(){
     return (
-<li className={this.props.isCurrentIdentity ? "currentIdentity identity" : ""}>
-  <div className="panel radius nomarginbottom identity">
+<li className={this.props.isCurrentIdentity ? "currentIdentity identity" : "identity"}>
+  <div className="panel radius nomarginbottom">
     <h4>{this.props.name}</h4>
     <h6>Balance: <Balance balance={this.props.balance} /></h6>
     <IdentityLoginForm name={this.props.name} handleLogin={this.props.handleLogin} isCurrentIdentity={this.props.isCurrentIdentity} />

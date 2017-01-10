@@ -5504,6 +5504,7 @@ form.send {
 
 .identity {
   min-height: 264px;
+  min-width: 220px;
 }
 
 /*Identity List Actions */
@@ -5528,6 +5529,11 @@ button.stealth {
 
 button[disabled].stealth {
   background-color: rgba(146, 30, 190, 0.9) !important;
+}
+
+/* Balance stuff */
+.dwBalance {
+  display: inline-block;
 }
 
 /* Pocket details  visual cleanup */

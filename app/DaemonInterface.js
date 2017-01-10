@@ -8,7 +8,8 @@ export default class DaemonInterface extends EventEmitter {
   constructor() {
     super();
     console.log("DaemonInterface constructor start");
-    this.ws = new WebSocket('ws://localhost:8888');
+    this.daemonAddress = "localhost";
+    this.daemonPort = 8888;
     this.wsOpen = false;
     this.useTestNet = true;
     this.pollingInterval = null;
@@ -16,32 +17,77 @@ export default class DaemonInterface extends EventEmitter {
     this.pockets = []; //Only remember the pockets of the current identity.
     this.previousPockets = ""; //For comparing when doing polling. It is a JSON.stringify'd version of pockets.
     this.pendingRequests = []; //Requests sent to the daemon to be handled on message
+
+    this.startDaemon(this.address, this.port);
+
   }
 
   /* ***************** */
   /* Utility functions */
   /* ***************** */
 
-  init() {
+  startDaemon = (address, port) => {
+    //TODO if darkwallet-daemon.py is down need to start it
+
+    // give it a second...
+
+    window.setTimeout(() => {
+      this.ws = new WebSocket('ws://'+ address + ':' + port);
+      this.init();
+    }, 1000);
+  }
+
+  init = () => {
     console.log("DaemonInterface init");
 
-    this.ws.on("open", () => {
-      this.wsOpen = true;
-      this.dwGetAccounts();
-    });
+    this.ws.on("open", this.wsHandleOpen);
+    this.ws.on('message', this.wsHandleMessage);
+    this.ws.on('error', this.wsHandleError);
+    this.ws.on('close', this.wsHandleClose);
 
-    this.ws.on('message', (data, flags) => {
-      // flags.binary will be set if a binary data is received.
-      // flags.masked will be set if the data was masked.
-      // Handle the message (show success or failure message in the UI, etc)
-      let message = JSON.parse(data);
-      this.handleDaemonMessage(message);
-      delete this.pendingRequests[message.id]; //Remove the request from the pending array
-    });
-
+    window.clearInterval(this.pollingInterval);
     this.pollingInterval = window.setInterval(this.pollDaemon, 5000);
 
     console.log("DaemonInterface init complete")
+  }
+
+  /* ************************ */
+  /* Websocket Event Handlers */
+  /* (More utility fns below) */
+  /* ************************ */
+
+  wsHandleOpen = () => {
+    this.deleteAppMessage("daemonDisconnected");
+    this.wsOpen = true;
+    this.dwGetAccounts();
+  }
+
+  wsHandleMessage = (data, flags) => {
+    // flags.binary will be set if a binary data is received.
+    // flags.masked will be set if the data was masked.
+    // Handle the message (show success or failure message in the UI, etc)
+    let message = JSON.parse(data);
+    this.handleDaemonMessage(message);
+    delete this.pendingRequests[message.id]; //Remove the request from the pending array
+  }
+
+  wsHandleError = (error) => {
+    error = error.toString();
+    console.log(error);
+    if(error.indexOf('ECONNREFUSED') >= 0 || error.indexOf('socket hang up') >= 0) {
+      this.wsHandleClose();
+      this.startDaemon(this.daemonAddress, this.daemonPort);
+    }
+  }
+
+  wsHandleClose = () => {
+    this.sendAppMessage("daemonDisconnected", "info", "Reconnecting...");
+    console.log('Daemon Connection Closed');
+    this.ws.removeListener("open", this.wsHandleOpen);
+    this.ws.removeListener('message', this.wsHandleMessage);
+    this.ws.removeListener('error', this.wsHandleError);
+    this.ws.removeListener('close', this.wsHandleClose);
+    this.wsOpen = false;
   }
 
   pollDaemon = () => {
@@ -52,7 +98,7 @@ export default class DaemonInterface extends EventEmitter {
     if(this.wsOpen) {
       this.dwGetPockets();
     } else {
-      //do kick the websocket - maybe jsut call init?
+      this.startDaemon(this.daemonAddress, this.daemonPort);
     }
   }
 
@@ -63,30 +109,32 @@ export default class DaemonInterface extends EventEmitter {
     if(this.wsOpen){
       this.pendingRequests[message.id] = (message);
       try {
-        this.ws.send(JSON.stringify(message));
+        this.ws.send(JSON.stringify(message), (error) => {
+          if(!error) {
+            return
+          }
+          error = error.toString();
+          console.log(error);
+          if(error.indexOf("not opened") >= 0) {
+            this.wsOpen = false;
+            this.startDaemon(this.daemonAddress, this.daemonPort);
+          }
+        });
       } catch(e) {
         console.log(e.name);
         if(e.name == "Error") {
-          this.emit("daemonMessage", {
-            name: "daemonDisconnected",
-            type: "error",
-            text: "Disconnected (try ctrl+r)",
-          });
-          this.emit("deleteDaemonMessage", "loggingIn");
+          this.sendAppMessage("daemonDisconnected", "error", "Disconnected (try ctrl+r)");
+          this.deleteAppMessage("loggingIn");
         }
       }
     } else {
-      //TODO: Throw an error / restart the daemon
+      this.startDaemon(this.daemonAddress, this.daemonPort);
       console.log("WebSocket Not Open Yet!");
-      this.emit("daemonMessage", {
-        name: "daemonDisconnected",
-        type: "error",
-        text: "Disconnected (try ctrl+r)",
-      });
+      this.sendAppMessage("daemonDisconnected", "error", "Disconnected (try ctrl+r)");
     }
   };
 
-  shouldEmitPocketsReady(messageId){
+  shouldEmitPocketsReady = (messageId) => {
     for(let id in this.pendingRequests) {
       let request = this.pendingRequests[id];
       if(request.id != messageId && (
@@ -104,11 +152,20 @@ export default class DaemonInterface extends EventEmitter {
     }
 
     //This was the last pocket-related query request and there was a change. Emit a ready event.
+    console.log("New Daemon Data!");
     this.emit("pocketsListReady", this.pockets);
   }
 
-  generateTransactionId() { //Used for transaction IDs
+  generateTransactionId = () => { //Used for transaction IDs
     return parseInt(Math.random() * 4294967295);
+  }
+
+  sendAppMessage = (name, type, text) => {
+    this.emit("appMessage", { name, type, text });
+  }
+
+  deleteAppMessage = (name) => {
+    this.emit("appMessageDelete", name);
   }
 
   /* ************** */
@@ -116,31 +173,19 @@ export default class DaemonInterface extends EventEmitter {
   /* ************** */
 
   startLogin = (accountName, password) => {
-      this.emit("daemonMessageDelete", "wrongPassword");
-      this.emit("daemonMessage", {
-        name: "loggingIn",
-        type: "info",
-        text: "Logging In...",
-      });
+      this.deleteAppMessage("wrongPassword");
+      this.sendAppMessage("loggingIn", "info", "Logging In...");
       this.dwSetAccount(accountName, password);
   };
 
   createIdentity = (identityName, password, useTestNet) => {
-    this.emit("daemonMessageDelete", "passwordMismatch");
-    this.emit('daemonMessage', {
-        name: "creatingIdentity",
-        type: "info",
-        text: "Creating Identity...",
-    });
+    this.deleteAppMessage("passwordMismatch");
+    this.sendAppMessage("creatingIdentity", "info", "Creating Identity...");
     this.dwCreateAccount(identityName, password, useTestNet);
   }
 
   restoreIdentity = (identityName, password, brainwallet, useTestNet) => {
-    this.emit('daemonMessage', {
-        name: "restoringIdentity",
-        type: "info",
-        text: "Restoring Identity...",
-    });
+    this.sendAppMessage("restoringIdentity", "info", "Restoring Identity...");
     this.dwRestoreAccount(identityName, password, brainwallet, useTestNet);
   }
 
@@ -150,11 +195,7 @@ export default class DaemonInterface extends EventEmitter {
   }
 
   createPocket = (pocketName) => {
-    this.emit('daemonMessage', {
-        name: "creatingPocket",
-        type: "info",
-        text: "Creating Pocket...",
-    });
+    this.sendAppMessage("creatingPocket", "info", "Creating Pocket...");
     this.dwCreatePocket(pocketName);
   }
 
@@ -163,12 +204,8 @@ export default class DaemonInterface extends EventEmitter {
   }
 
   sendCoins = (address, amount, pocket, fee) => {
-    this.emit("daemonMessageDelete", "notEnoughFunds");
-    this.emit('daemonMessage', {
-        name: "sendingCoins",
-        type: "info",
-        text: "Sending Coins...",
-    });
+    this.deleteAppMessage("notEnoughFunds");
+    this.sendAppMessage("sendingCoins", "info", "Sending Coins...");
     this.dwSend(address, amount, pocket, fee);
   }
 
@@ -185,36 +222,20 @@ export default class DaemonInterface extends EventEmitter {
       console.log(message.error);
 
       if(message.error == "wrong_password"){
-        this.emit("daemonMessageDelete", "loggingIn");
-        this.emit("daemonMessage", {
-          name: "wrongPassword",
-          type: "error",
-          text: "Wrong password!",
-        });
+        this.deleteAppMessage("loggingIn");
+        this.sendAppMessage("wrongPassword", "error", "Wrong password!");
       }
       if(message.error == "invalid_brainwallet"){
-        this.emit("daemonMessageDelete", "restoringIdentity");
-        this.emit("daemonMessage", {
-          name: "invalidBrainwallet",
-          type: "error",
-          text: "Invalid Brainwallet!",
-        });
+        this.deleteAppMessage("restoringIdentity");
+        this.sendAppMessage("invalidBrainwallet", "error", "Invalid Brainwallet!");
       }
       if(message.error =="passwords do not match"){
-        this.emit("daemonMessageDelete", "creatingIdentity");
-        this.emit("daemonMessage", {
-          name: "passwordMismatch",
-          type: "error",
-          text: "Passwords do not match!",
-        });
+        this.deleteAppMessage("creatingIdentity");
+        this.sendAppMessage("passwordMismatch", "error", "Passwords do not match!");
       }
       if(message.error =="not_enough_funds"){
-        this.emit("daemonMessageDelete", "sendingCoins");
-        this.emit("daemonMessage", {
-          name: "notEnoughFunds",
-          type: "error",
-          text: "Not Enough Funds",
-        });
+        this.sendAppMessage("sendingCoins");
+        this.sendAppMessage("notEnoughFunds", "error", "Not Enough Funds");
       }
       return;
     }
@@ -276,7 +297,7 @@ export default class DaemonInterface extends EventEmitter {
   };
 
   handleCreateAccount = (message) => {
-    this.emit("daemonMessageDelete", "creatingIdentity");
+    this.deleteAppMessage("creatingIdentity");
 
     this.identities.identitiesList.push({
       name: this.pendingRequests[message.id].params[0],
@@ -288,7 +309,7 @@ export default class DaemonInterface extends EventEmitter {
   };
 
   handleRestoreAccount = (message) => {
-    this.emit("daemonMessageDelete", "restoringIdentity");
+    this.deleteAppMessage("restoringIdentity");
 
     this.identities.identitiesList.push({
       name: this.pendingRequests[message.id].params[0],
@@ -300,7 +321,7 @@ export default class DaemonInterface extends EventEmitter {
   };
 
   handleSetAccount = (message) => {
-    this.emit("daemonMessageDelete", "loggingIn");
+    this.deleteAppMessage("loggingIn");
     this.pockets = [];
     this.identities.currentIdentity = this.pendingRequests[message.id].params[0];
     this.dwGetPockets();
@@ -358,7 +379,7 @@ export default class DaemonInterface extends EventEmitter {
   };
 
   handleCreatePocket = (message) => {
-    this.emit("daemonMessageDelete", "creatingPocket");
+    this.deleteAppMessage("creatingPocket");
     this.dwGetPockets();
   };
 
@@ -411,7 +432,7 @@ export default class DaemonInterface extends EventEmitter {
   }
 
   handleSendCoins = (message) => {
-    this.emit("daemonMessageDelete", "sendingCoins");
+    this.deleteAppMessage("sendingCoins");
     this.emit("sendCoinsComplete");
   }
 

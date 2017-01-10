@@ -41,6 +41,7 @@ You will need node v6 (v4 is the default version on Ubuntu)
 - Settings?
 - Check for password matching as you type
 - Better notification behavior
+- Wrap all daemon messages in dedicated functions?
 
 - Themes?
 
