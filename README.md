@@ -34,14 +34,10 @@ You will need node v6 (v4 is the default version on Ubuntu)
 - QR codes https://www.npmjs.com/package/qrcode.react
 - Fix icons?
 - Start the daemon if it's not started
-- Try to open the websocket if it's not open
-- Show status of connection
 - Daemon status, reset, launch
-- Daemon port
 - Settings?
 - Check for password matching as you type
 - Better notification behavior
-- Wrap all daemon messages in dedicated functions?
 
 - Themes?
 

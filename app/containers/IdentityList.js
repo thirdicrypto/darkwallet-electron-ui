@@ -89,7 +89,7 @@ class IdentityList extends Component {
   </div>
   <div className="row">
     <div className="small-12 columns">
-      <ul className="large-block-grid-5 medium-block-grid-4 small-block-grid-2">
+      <ul className="identityList">
         {this.props.identities.map((identity, i) => {
           return <Identity key={i}
             name={identity.name}

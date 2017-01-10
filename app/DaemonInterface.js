@@ -65,7 +65,6 @@ export default class DaemonInterface extends EventEmitter {
   wsHandleMessage = (data, flags) => {
     // flags.binary will be set if a binary data is received.
     // flags.masked will be set if the data was masked.
-    // Handle the message (show success or failure message in the UI, etc)
     let message = JSON.parse(data);
     this.handleDaemonMessage(message);
     delete this.pendingRequests[message.id]; //Remove the request from the pending array

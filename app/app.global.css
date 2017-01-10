@@ -5502,9 +5502,18 @@ form.send {
   margin-top: 16px !important;
 }
 
+.identityList {
+    margin: 0;
+}
+
 .identity {
   min-height: 264px;
   min-width: 220px;
+  width: 220px;
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 20px;
+  margin-bottom: 20px;
 }
 
 /*Identity List Actions */
