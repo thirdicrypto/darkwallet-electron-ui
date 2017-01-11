@@ -23,16 +23,6 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.handleDaemonEvents();
-    //this.props.dwDaemon.init();
-  }
-
-  componentWillMount() {
-    this.setState({busy: false});
-    for (i in this.props.appMessages) {
-      if(this.props.appMessages.type = "info") {
-        this.setState({busy: false});
-      }
-    }
   }
 
   componentWillReceiveProps(newProps) {
@@ -41,6 +31,15 @@ class App extends Component {
     } else {
       if(this.props.currentIdentity != newProps.currentIdentity) {
         this.setState({showIdentitiesDropdown: false});
+      }
+    }
+
+    if(newProps.appMessages.length > 0) {
+      this.setState({busy: false});
+      for(let i in newProps.appMessages) {
+        if(newProps.appMessages[i].type == "info") {
+          this.setState({busy: true});
+        }
       }
     }
   }
@@ -89,11 +88,11 @@ class App extends Component {
               {/*<li title="Fetching data from obelisk!" ><i className="icon-cloud-download"> 0</i></li>*/}
               {/*<li title="Current height">BC Height</li>*/}
               {/*<li title="Block explorer"><Link to="/explorer"><i className="icon-sitemap"></i></Link></li>*/}
-              <li><Link to={ "/wallet/details/" + this.props.currentPocket }><i className="icon-wallet"></i> Wallet</Link></li>
+              {/*<li><Link to={ "/wallet/details/" + this.props.currentPocket }><i className="icon-wallet"></i> Wallet</Link></li>*/}
               {/*<li><Link to="/send"><i className="icon-rocket"></i> Send</Link></li> */}
               {/*<li><Link to="/contacts"><i className="icon-contacts"></i> Contacts</Link></li>*/}
               {/*<li><Link to="/lobby"><i className="icon-chat"></i> Lobby</Link></li>*/}
-              <li title="Settings" id="settings"><Link to="/settings"><i className="icon-cog"></i> Settings</Link></li>
+              {/*<li title="Settings" id="settings"><Link to="/settings"><i className="icon-cog"></i> Settings</Link></li>*/}
               <li title="Identities" onClick={this.toggleIdentitiesDropdown}><a><i className="icon-profile"></i> {this.props.currentIdentity}</a></li>
             </ul>
           </section>

@@ -5480,7 +5480,7 @@ form.send {
 }
 
 .navDropdown.active {
-  max-height: 500px;
+  max-height: 100%;
   border-bottom: 2px solid #555;
   overflow-y: scroll;
 }
