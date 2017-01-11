@@ -28,7 +28,7 @@ export function deleteAppMessage(messageName) {
 
     for(let i in newAppMessages) {
       if(newAppMessages[i].name == messageName) {
-        delete newAppMessages[i];
+        newAppMessages.splice(i,1);
       }
     }
 
