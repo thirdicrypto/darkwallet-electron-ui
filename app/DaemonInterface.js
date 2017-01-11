@@ -222,13 +222,16 @@ export default class DaemonInterface extends EventEmitter {
         this.deleteAppMessage("restoringIdentity");
         this.sendAppMessage("invalidBrainwallet", "error", "Invalid Brainwallet!");
       }
-      if(message.error =="passwords do not match"){
+      if(message.error == "passwords do not match"){
         this.deleteAppMessage("creatingIdentity");
         this.sendAppMessage("passwordMismatch", "error", "Passwords do not match!");
       }
-      if(message.error =="not_enough_funds"){
-        this.sendAppMessage("sendingCoins");
+      if(message.error == "not_enough_funds"){
+        this.deleteAppMessage("sendingCoins");
         this.sendAppMessage("notEnoughFunds", "error", "Not Enough Funds");
+      }
+      if(message.error == "channel_timeout") {
+        this.sendAppMessage("channelTimeout", "error", "Error connecting to server.");
       }
       return;
     }
