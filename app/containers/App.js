@@ -24,6 +24,7 @@ class App extends Component {
     super(props);
     this.handleDaemonEvents();
     this.state = {busy: false};
+    this.state = {error: false};
   }
 
   componentWillReceiveProps(newProps) {
@@ -36,11 +37,18 @@ class App extends Component {
     }
 
     this.setState({busy: false});
+    this.setState({error: false});
     if(newProps.appMessages.length > 0) {
       for(let i in newProps.appMessages) {
         if(newProps.appMessages[i].type == "info") {
           this.setState({busy: true});
         }
+        if(newProps.appMessages[i].type == "error") {
+          this.setState({error: true});
+        }
+      }
+      if(this.state.busy) {
+        this.setState({error: false}); //Busy animation takes precedence over error
       }
     }
   }
@@ -79,7 +87,7 @@ class App extends Component {
         <nav className="top-bar">
           <ul className="title-area">
             <li className="name">
-              <h1><a><img id="logo" className={this.state.busy ? "busy" : ""} width="32" height="32" src="../resources/images/logo.svg" /> Darkwallet</a></h1>
+              <h1><a><img id="logo" className={(this.state.busy ? "busy" : "") + (this.state.error ? "error" : "")} width="32" height="32" src="../resources/images/logo.svg" /> Darkwallet</a></h1>
             </li>
           </ul>
           <AppMessageList deleteAppMessage={this.props.deleteAppMessage} appMessages={this.props.appMessages}/>

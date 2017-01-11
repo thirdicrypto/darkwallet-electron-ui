@@ -5423,6 +5423,12 @@ form.send {
 }
 
 /* General App Stuff */
+#logo {
+  transition: all .2s ease-in;
+}
+#logo.error {
+  transform: rotate(60deg);
+}
 
 .appMessageList {
   float: left;
