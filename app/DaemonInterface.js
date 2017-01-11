@@ -33,13 +33,11 @@ export default class DaemonInterface extends EventEmitter {
 
     window.setTimeout(() => {
       this.ws = new WebSocket('ws://'+ address + ':' + port);
-      this.init();
+      this.initSocket();
     }, 1000);
   }
 
-  init = () => {
-    console.log("DaemonInterface init");
-
+  initSocket = () => {
     this.ws.on("open", this.wsHandleOpen);
     this.ws.on('message', this.wsHandleMessage);
     this.ws.on('error', this.wsHandleError);
@@ -48,7 +46,7 @@ export default class DaemonInterface extends EventEmitter {
     window.clearInterval(this.pollingInterval);
     this.pollingInterval = window.setInterval(this.pollDaemon, 5000);
 
-    console.log("DaemonInterface init complete")
+    console.log("DaemonInterface socket init complete");
   }
 
   /* ************************ */
@@ -102,9 +100,6 @@ export default class DaemonInterface extends EventEmitter {
   }
 
   sendMessage = (message) => { //Sends a message to the daemon
-//    console.log("Sending Message to Daemon:");
-//    console.log(message);
-
     if(this.wsOpen){
       this.pendingRequests[message.id] = (message);
       try {
@@ -112,15 +107,17 @@ export default class DaemonInterface extends EventEmitter {
           if(!error) {
             return
           }
+
           error = error.toString();
-          console.log(error);
+          console.log("Error sending message: " + error);
           if(error.indexOf("not opened") >= 0) {
             this.wsOpen = false;
             this.startDaemon(this.daemonAddress, this.daemonPort);
           }
         });
       } catch(e) {
-        console.log(e.name);
+        //TODO: Maybe this never runs because of the error handler above. Consider removing it.
+        console.log("Uncaught error sending message: " + e.name);
         if(e.name == "Error") {
           this.sendAppMessage("daemonDisconnected", "error", "Disconnected (try ctrl+r)");
           this.deleteAppMessage("loggingIn");
@@ -128,8 +125,6 @@ export default class DaemonInterface extends EventEmitter {
       }
     } else {
       this.startDaemon(this.daemonAddress, this.daemonPort);
-      console.log("WebSocket Not Open Yet!");
-      this.sendAppMessage("daemonDisconnected", "error", "Disconnected (try ctrl+r)");
     }
   };
 
@@ -187,7 +182,6 @@ export default class DaemonInterface extends EventEmitter {
     this.sendAppMessage("restoringIdentity", "info", "Restoring Identity...");
     this.dwRestoreAccount(identityName, password, brainwallet, useTestNet);
   }
-
 
   deleteIdentity = (identityName) => {
     this.dwDeleteAccount(identityName);
@@ -287,36 +281,20 @@ export default class DaemonInterface extends EventEmitter {
         name: accountName,
         balance: -1,
       }
-    })
+    });
     this.identities.currentIdentity = accounts[0];
-    if (this.identities.currentIdentity != null) {
-      this.dwGetPockets();
-    }
+    this.dwGetPockets();
     this.emit("identitiesListReady", this.identities);
   };
 
   handleCreateAccount = (message) => {
     this.deleteAppMessage("creatingIdentity");
-
-    this.identities.identitiesList.push({
-      name: this.pendingRequests[message.id].params[0],
-      balance: 0,
-      pockets: [],
-    });
-
-    this.emit("identitiesListReady", this.identities);
+    this.dwGetAccounts();
   };
 
   handleRestoreAccount = (message) => {
     this.deleteAppMessage("restoringIdentity");
-
-    this.identities.identitiesList.push({
-      name: this.pendingRequests[message.id].params[0],
-      balance: 0,
-      pockets: [],
-    });
-
-    this.emit("identitiesListReady", this.identities);
+    this.dwGetAccounts();
   };
 
   handleSetAccount = (message) => {
@@ -328,20 +306,12 @@ export default class DaemonInterface extends EventEmitter {
   };
 
   handleDeleteAccount = (message) => {
-    let identitiesList = this.identities.identitiesList;
-
-    for(let i in identitiesList) {
-      console.log(identitiesList[i]);
-      if(identitiesList[i].name == this.pendingRequests[message.id].params[0]) {
-        delete identitiesList[i];
-      }
-    }
-    this.emit("identitiesListReady", this.identities);
-    console.log(this.identities);
+    this.dwGetAccounts();
   };
 
   handleListPockets = (message) => {
     var pocketList = message.result[0]
+    this.pockets = [];
 
     if(pocketList.length <= 0) {
       console.log("Empty Pocket List from Daemon");

@@ -1,9 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { createAppMessage } from '../actions/app';
 
 class IdentityCreate extends Component {
   static propTypes = {
     dwDaemon: PropTypes.object.isRequired,
+    createAppMessage: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -22,7 +24,11 @@ class IdentityCreate extends Component {
     let useTestnet = e.target.querySelector('[name=testnet]').checked;
 
     if(password !== passwordConfirm) {
-      //TODO: Throw an error here
+      this.props.createAppMessage({
+        name: "passwordMismatch",
+        type: "error",
+        text: "Passwords do not match",
+      });
       console.log("passwords do not match")
       return;
     }
@@ -88,6 +94,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    createAppMessage: (message) => dispatch(createAppMessage(message)),
   }
 }
 

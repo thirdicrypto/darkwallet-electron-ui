@@ -23,6 +23,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.handleDaemonEvents();
+    this.state = {busy: false};
   }
 
   componentWillReceiveProps(newProps) {
@@ -34,8 +35,8 @@ class App extends Component {
       }
     }
 
+    this.setState({busy: false});
     if(newProps.appMessages.length > 0) {
-      this.setState({busy: false});
       for(let i in newProps.appMessages) {
         if(newProps.appMessages[i].type == "info") {
           this.setState({busy: true});
