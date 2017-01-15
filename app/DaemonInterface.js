@@ -84,6 +84,7 @@ export default class DaemonInterface extends EventEmitter {
     this.ws.removeListener('message', this.wsHandleMessage);
     this.ws.removeListener('error', this.wsHandleError);
     this.ws.removeListener('close', this.wsHandleClose);
+    delete this.ws;
     this.wsOpen = false;
   }
 
@@ -135,7 +136,8 @@ export default class DaemonInterface extends EventEmitter {
           request.command == "dw_receive" ||
           request.command == "dw_balance" ||
           request.command == "dw_history" ||
-          request.command == "dw_stealth" )
+          request.command == "dw_stealth" ||
+          request.command == "dw_pending_payments")
         ) {
         return; //There are other pending pocket requests Don't emit an event.
       }
@@ -267,6 +269,8 @@ export default class DaemonInterface extends EventEmitter {
         break;
       case "dw_send" : this.handleSendCoins(message);
         break;
+      case "dw_pending_payments" : this.handlePendingPayments(message);
+        break;
       case "dw_seed" : this.handleBackup(message);
         break;
       default: console.log("Warning: DaemonInterface: Unknown command");
@@ -326,6 +330,7 @@ export default class DaemonInterface extends EventEmitter {
       this.dwGetPocketAddresses(pocketList[i]);
       this.dwGetPocketHistory(pocketList[i]);
       this.dwGetPocketStealthAddress(pocketList[i]);
+      this.dwGetPocketPendingPayments(pocketList[i]);
       if(typeof this.pockets[i] === "undefined") {
         this.pockets[i] = {
           name: pocketList[i],
@@ -362,6 +367,9 @@ export default class DaemonInterface extends EventEmitter {
       let pocket = this.pockets[id];
       if(pocket.name == currentPocketName) {
         pocket.addresses = addresses;
+        if(typeof pocket.addresses == 'undefined') {
+          pocket.addresses = [];
+        }
       }
     }
     this.shouldEmitPocketsReady(message.id);
@@ -408,6 +416,21 @@ export default class DaemonInterface extends EventEmitter {
     this.emit("sendCoinsComplete");
   }
 
+  handlePendingPayments = (message) => {
+    let pendingPayments = message.result;
+    let currentPocketName = this.pendingRequests[message.id].params[0];
+    for(let id in this.pockets) {
+      let pocket = this.pockets[id];
+      if(pocket.name == currentPocketName) {
+        pocket.pendingPayments = pendingPayments;
+        if(typeof pocket.pendingPayments == 'undefined') {
+          pocket.pendingPayments = [];
+        }
+      }
+    }
+    this.shouldEmitPocketsReady(message.id);
+  }
+
   handleBackup = (message) => {
     // best function in here
     alert("Backup: \n\n" + message.result.join(" "));
@@ -421,7 +444,8 @@ export default class DaemonInterface extends EventEmitter {
     this.sendMessage({
       "command":"dw_create_account",
       "id": this.generateTransactionId(),
-      "params": [accountName, accountPassword, useTestNet]});
+      "params": [accountName, accountPassword, useTestNet]
+    });
   }
 
   /* Restore wallet from Seed */
@@ -512,7 +536,7 @@ export default class DaemonInterface extends EventEmitter {
       "command": "dw_history",
       "id": this.generateTransactionId(),
       "params": [pocket],
-    })
+    });
   }
   dwDeletePocket(pocket){}
 
@@ -522,6 +546,14 @@ export default class DaemonInterface extends EventEmitter {
       "command": "dw_send",
       "id": this.generateTransactionId(),
       "params": [[[address , parseInt(amount)]], pocket, parseInt(fee)],
+    });
+  }
+
+  dwGetPocketPendingPayments(pocket) {
+    this.sendMessage({
+      "command": "dw_pending_payments",
+      "id": this.generateTransactionId(),
+      "params": [pocket],
     });
   }
 

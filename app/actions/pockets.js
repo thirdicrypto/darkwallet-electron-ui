@@ -4,6 +4,7 @@ import { setIdentities, setCurrentBalance } from './identities';
 import { setAddresses } from './addresses';
 import { setHistory } from './history';
 import { setStealthAddress } from './stealthAddress';
+import { setPendingPayments } from './pendingPayments';
 
 export const SET_POCKETS = 'SET_POCKETS';
 export const CREATE_POCKET = 'CREATE_POCKET';
@@ -59,18 +60,21 @@ export function handleSetCurrentPocket(pocketName) {
     let pockets = getState().pockets.pockets.slice();
     let newAddresses = [];
     let newHistory = [];
+    let newPendingPayments = [];
     let newStealthAddress = "";
     for(let i in pockets) {
       if(pockets[i].name == pocketName) {
         newAddresses = update(newAddresses, {$set: pockets[i].addresses});
         newHistory = update(newHistory, {$set: pockets[i].history});
         newStealthAddress = update(newStealthAddress, {$set: pockets[i].stealthAddress})
+        newPendingPayments = update(newPendingPayments, {$set: pockets[i].pendingPayments})
       }
     }
     dispatch(setCurrentPocket(pocketName));
     dispatch(setAddresses(newAddresses));
     dispatch(setHistory(newHistory));
     dispatch(setStealthAddress(newStealthAddress));
+    dispatch(setPendingPayments(newPendingPayments));
   }
 }
 

@@ -6,7 +6,7 @@ export default class PocketHistoryItem extends Component {
     address: PropTypes.string.isRequired,
     value: PropTypes.number.isRequired,
     type: PropTypes.string.isRequired,
-    output: PropTypes.object.isRequired,
+    output: PropTypes.object,
   }
 
   render() {

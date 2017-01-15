@@ -5471,7 +5471,7 @@ form.send {
 
 .emptyComponentMessage {
   text-align: center;
-  padding: 100px;
+  padding: 40px 20px;
 }
 
 .navDropdown {
@@ -5546,6 +5546,17 @@ button[disabled].stealth {
   background-color: rgba(146, 30, 190, 0.9) !important;
 }
 
+.pendingPayments {
+  max-height: 250px;
+}
+.pendingHeader {
+  height: 20px;
+  padding-right: 5px;
+
+}
+.payment-row {
+  padding-left: 5px;
+}
 /* Balance stuff */
 .dwBalance {
   display: inline-block;

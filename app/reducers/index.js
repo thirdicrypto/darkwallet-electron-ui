@@ -8,6 +8,7 @@ import pockets from './pockets';
 import addresses from './addresses';
 import stealthAddress from './stealthAddress';
 import history from './history';
+import pendingPayments from './pendingPayments';
 
 const rootReducer = combineReducers({
   app,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   addresses,
   stealthAddress,
   history,
+  pendingPayments,
   routing,
 });
 
