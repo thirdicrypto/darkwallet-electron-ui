@@ -22,7 +22,7 @@ class PocketHistory extends Component {
     }
 
 		return (
-<div className="large-6 columns">
+<div className="large-12 columns">
   <div className="panel radius">
 		<div className="tab-scroller" >
       {this.props.history.map((item, i) => {
@@ -47,4 +47,3 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PocketHistory);
-
