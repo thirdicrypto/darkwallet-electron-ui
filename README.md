@@ -20,7 +20,7 @@ You will need node v6 (v4 is the default version on Ubuntu)
 
 ## KNOWN ISSUES:
 
-- Need to verify send works
+- None right now
 
 ## TO DO:
 
