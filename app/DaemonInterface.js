@@ -306,7 +306,7 @@ export default class DaemonInterface extends EventEmitter {
 
   handleSetAccount = (message) => {
     this.deleteAppMessage("loggingIn");
-    this.pockets = [];
+    delete this.pockets;
     this.identities.currentIdentity = this.pendingRequests[message.id].params[0];
     this.dwGetPockets();
     this.emit("currentAccountReady", this.identities.currentIdentity);
@@ -318,6 +318,7 @@ export default class DaemonInterface extends EventEmitter {
 
   handleListPockets = (message) => {
     var pocketList = message.result[0]
+    delete this.pockets;
     this.pockets = [];
 
     if(pocketList.length <= 0) {

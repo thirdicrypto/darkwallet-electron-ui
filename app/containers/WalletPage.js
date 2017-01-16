@@ -5,7 +5,7 @@ import Balance from '../components/Balance';
 
 class WalletPage extends Component {
   static propTypes = {
-    children: PropTypes.element.isRequired,
+    children: PropTypes.element,
     pockets: PropTypes.array.isRequired,
     currentBalance: PropTypes.number.isRequired,
     currentIdentity: PropTypes.string,

@@ -20,7 +20,7 @@ You will need node v6 (v4 is the default version on Ubuntu)
 
 ## KNOWN ISSUES:
 
-- None right now
+- after a while, memory use takes off.
 
 ## TO DO:
 
