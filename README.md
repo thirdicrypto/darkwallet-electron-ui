@@ -24,7 +24,6 @@ You will need node v6 (v4 is the default version on Ubuntu)
 
 ## TO DO:
 
-- Handle empty/invalid form fields
 - Delete Pocket
 - Confirm pocket deletes
 

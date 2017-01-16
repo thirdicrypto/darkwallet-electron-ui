@@ -22,6 +22,10 @@ class IdentityRestore extends Component {
     let useTestnet = e.target.querySelector('[name=testnet]').checked;
     let brainwallet = e.target.querySelector('[name=brainwallet]').value.split(" ");
 
+    if(identityName.length <= 0 || password.length <= 0 || brainwallet <= 0) {
+      return;
+    }
+
     if(password !== passwordConfirm) {
       //TODO: Throw an error here
       console.log("passwords do not match")

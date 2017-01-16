@@ -15,7 +15,7 @@ class PendingPayments extends Component {
       return (
 <div className="pendingPayments panel radius off-canvas-wrap">
   <div className="emptyComponentMessage">
-    <h2> No pending payments for this pocket </h2>
+    <h5> No pending payments for this pocket </h5>
   </div>
 </div>
       )

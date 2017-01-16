@@ -23,13 +23,16 @@ class IdentityCreate extends Component {
     let passwordConfirm = e.target.querySelector('[name=passwordConfirm]').value;
     let useTestnet = e.target.querySelector('[name=testnet]').checked;
 
+    if(identityName.length <= 0 || password.length <=0 ) {
+      return;
+    }
+
     if(password !== passwordConfirm) {
       this.props.createAppMessage({
         name: "passwordMismatch",
         type: "error",
         text: "Passwords do not match",
       });
-      console.log("passwords do not match")
       return;
     }
 

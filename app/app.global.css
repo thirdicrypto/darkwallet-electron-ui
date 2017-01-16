@@ -5471,7 +5471,7 @@ form.send {
 
 .emptyComponentMessage {
   text-align: center;
-  padding: 40px 20px;
+  padding: 20px 10px;
 }
 
 .navDropdown {
@@ -5548,6 +5548,13 @@ button[disabled].stealth {
 
 .pendingPayments {
   max-height: 250px;
+}
+.pendingPayments .tab-scroller {
+    overflow-y: scroll;
+    max-height: 180px;
+    width: 100%;
+    margin-top: 5px;
+    padding-top: 0;
 }
 .pendingHeader {
   height: 20px;
