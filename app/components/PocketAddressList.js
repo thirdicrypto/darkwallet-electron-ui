@@ -35,9 +35,9 @@ class PocketAddressList extends Component {
     {this.props.addresses.map((address, i) => {
       return <PocketAddress key={i} address={address} />
     })}
-    <div className="text-right topmargin">
+{/*    <div className="text-right topmargin">
       <a className="button small radius nomarginbottom fa fa-plus" > New address</a>
-    </div>
+    </div> */}
   </div>
 </div>
 		);

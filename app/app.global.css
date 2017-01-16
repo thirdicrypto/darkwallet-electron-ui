@@ -5547,7 +5547,6 @@ button[disabled].stealth {
 }
 
 .pendingPayments {
-  max-height: 250px;
 }
 .pendingPayments .tab-scroller {
     overflow-y: scroll;

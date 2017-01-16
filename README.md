@@ -27,7 +27,7 @@ You will need node v6 (v4 is the default version on Ubuntu)
 - Delete Pocket
 - Confirm pocket deletes
 
-## MAYBE LATER:
+## FOR LATER:
 
 - QR codes https://www.npmjs.com/package/qrcode.react
 - Fix / add icons?
@@ -35,8 +35,9 @@ You will need node v6 (v4 is the default version on Ubuntu)
 - Check for password matching as you type
 - Better notification behavior
 
-- Themes?
+## MAYBE SOME DAY:
 
+- Themes?
 - Tests
 - Move UI logic to dedicated containers and markup to components
 - Break down big components, Reorganize components?
