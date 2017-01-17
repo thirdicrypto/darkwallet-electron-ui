@@ -4,8 +4,16 @@ import { Link } from 'react-router';
 
 class PocketDetails extends Component {
   static propTypes = {
+    dwDaemonHandleDelete: PropTypes.func.isRequired,
     pocketName: PropTypes.string.isRequired,
     url: PropTypes.object.isRequired,
+  }
+
+  handleDeletePocket = (event) => {
+    if(confirm("Are you sure you want to delete this pocket?")){
+      console.log("deleting the pocket");
+      this.props.dwDaemonHandleDelete(this.props.pocketName);
+    }
   }
 
   render() {
@@ -38,6 +46,9 @@ class PocketDetails extends Component {
           <dd className={this.props.url.pathname.indexOf("addresses") > 0 ? "active" : ""}>
             <Link to={"/wallet/details/addresses/" + this.props.pocketName}>Addresses</Link>
           </dd>
+          <dd className="right warning">
+            <a onClick={this.handleDeletePocket}>Delete Pocket</a>
+          </dd>
         </dl>
       </div>
     </div>
@@ -52,6 +63,7 @@ function mapStateToProps(state) {
   return {
     pocketName: state.pockets.currentPocket,
     url: state.routing.locationBeforeTransitions,
+    dwDaemonHandleDelete: state.app.dwDaemon.deletePocket,
   }
 }
 

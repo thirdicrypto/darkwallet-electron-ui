@@ -20,12 +20,7 @@ You will need node v6 (v4 is the default version on Ubuntu)
 
 ## KNOWN ISSUES:
 
-- after a while, memory use takes off.
-
 ## TO DO:
-
-- Delete Pocket
-- Confirm pocket deletes
 
 ## FOR LATER:
 
@@ -33,12 +28,12 @@ You will need node v6 (v4 is the default version on Ubuntu)
 - Fix / add icons?
 - Start the daemon if it's not started
 - Check for password matching as you type
-- Better notification behavior
+- Better notification behavior?
 
 ## MAYBE SOME DAY:
 
 - Themes?
 - Tests
-- Move UI logic to dedicated containers and markup to components
+- Move UI logic to dedicated containers and markup to components?
 - Break down big components, Reorganize components?
 - Rename identities to wallets? Rename other classes for consistency?

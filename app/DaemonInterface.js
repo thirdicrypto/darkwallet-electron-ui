@@ -100,7 +100,13 @@ export default class DaemonInterface extends EventEmitter {
     }
   }
 
-  sendMessage = (message) => { //Sends a message to the daemon
+  sendMessage = (command, params) => { //Sends a message to the daemon
+    var message = {
+      "command":command,
+      "id": this.generateTransactionId(),
+      "params": params
+    };
+
     if(this.wsOpen){
       this.pendingRequests[message.id] = (message);
       try {
@@ -194,6 +200,11 @@ export default class DaemonInterface extends EventEmitter {
     this.dwCreatePocket(pocketName);
   }
 
+  deletePocket = (pocketName) => {
+    this.sendAppMessage("deletingPocket", "info", "Deleting Pocket...");
+    this.dwDeletePocket(pocketName);
+  }
+
   validateAddress = (address) => {
     this.dwValidateAddress(address);
   }
@@ -258,6 +269,8 @@ export default class DaemonInterface extends EventEmitter {
       case "dw_balance" : this.handleBalance(message);
         break;
       case "dw_create_pocket" : this.handleCreatePocket(message);
+        break;
+      case "dw_delete_pocket" : this.handleDeletePocket(message);
         break;
       case "dw_receive" : this.handleReceive(message);
         break;
@@ -361,6 +374,11 @@ export default class DaemonInterface extends EventEmitter {
     this.dwGetPockets();
   };
 
+  handleDeletePocket = (message) => {
+    this.deleteAppMessage("deletingPocket");
+    this.dwGetPockets();
+  }
+
   handleReceive = (message) => {
     let addresses = message.result[0];
     let currentPocketName = this.pendingRequests[message.id].params[0];
@@ -442,128 +460,70 @@ export default class DaemonInterface extends EventEmitter {
   /*  Accounts */
   /*************/
   dwCreateAccount(accountName, accountPassword, useTestNet){
-    this.sendMessage({
-      "command":"dw_create_account",
-      "id": this.generateTransactionId(),
-      "params": [accountName, accountPassword, useTestNet]
-    });
+    this.sendMessage("dw_create_account", [accountName, accountPassword, useTestNet]);
   }
 
   /* Restore wallet from Seed */
   dwRestoreAccount(accountName, brainwallet, accountPassword, useTestNet) {
-    this.sendMessage({
-      "command":"dw_restore_account",
-      "id": this.generateTransactionId(),
-      "params": [accountName, brainwallet, accountPassword, useTestNet],
-    });
+    this.sendMessage("dw_restore_account", [accountName, brainwallet, accountPassword, useTestNet]);
   }
 
   dwSetAccount(accountName, accountPassword){
-    this.sendMessage({
-      "command": "dw_set_account",
-      "id": this.generateTransactionId(),
-      "params" : [accountName, accountPassword]
-    });
+    this.sendMessage("dw_set_account", [accountName, accountPassword]);
   }
 
   dwGetAccounts(){
-    this.sendMessage({
-      "command":"dw_list_accounts",
-      "id": this.generateTransactionId(),
-      "params": []
-    });
+    this.sendMessage("dw_list_accounts", []);
   }
 
   dwDeleteAccount(accountName){
-    this.sendMessage({
-      "command": "dw_delete_account",
-      "id": this.generateTransactionId(),
-      "params": [accountName],
-    });
+    this.sendMessage("dw_delete_account", [accountName]);
   }
 
   /* Pockets */
   dwCreatePocket(pocket){
-    this.sendMessage({
-      "command": "dw_create_pocket",
-      "id": this.generateTransactionId(),
-      "params": [pocket],
-    });
+    this.sendMessage("dw_create_pocket", [pocket]);
   }
 
   dwGetPockets(){
     this.previousPockets = JSON.stringify(this.pockets);
-    this.sendMessage({
-      "command": "dw_list_pockets",
-      "id": this.generateTransactionId(),
-      "params": []
-    });
+    this.sendMessage("dw_list_pockets", []);
   }
 
   dwGetPocketBalance(pocket) {
-    this.sendMessage({
-      "command": "dw_balance",
-      "id": this.generateTransactionId(),
-      "params": [pocket]
-    });
+    this.sendMessage("dw_balance", [pocket]);
   }
 
   dwGetPocketAddresses(pocket){
-    this.sendMessage({
-      "command": "dw_receive",
-      "id": this.generateTransactionId(),
-      "params": [pocket],
-    });
+    this.sendMessage("dw_receive", [pocket]);
   }
 
   dwValidateAddress(address){
-    this.sendMessage({
-      "command": "dw_validate_address",
-      "id": this.generateTransactionId(),
-      "params": [address],
-    });
+    this.sendMessage("dw_validate_address", [address]);
   }
 
   dwGetPocketStealthAddress(pocket) {
-    this.sendMessage({
-      "command": "dw_stealth",
-      "id": this.generateTransactionId(),
-      "params": [pocket],
-    });
+    this.sendMessage("dw_stealth", [pocket]);
   }
 
   dwGetPocketHistory(pocket) {
-    this.sendMessage({
-      "command": "dw_history",
-      "id": this.generateTransactionId(),
-      "params": [pocket],
-    });
+    this.sendMessage("dw_history", [pocket]);
   }
-  dwDeletePocket(pocket){}
+  dwDeletePocket(pocket){
+    this.sendMessage("dw_delete_pocket", [pocket]);
+  }
 
   /* Send Bitcoin */
   dwSend(address, amount, pocket, fee){
-    this.sendMessage({
-      "command": "dw_send",
-      "id": this.generateTransactionId(),
-      "params": [[[address , parseInt(amount)]], pocket, parseInt(fee)],
-    });
+    this.sendMessage("dw_send", [[[address , parseInt(amount)]], pocket, parseInt(fee)]);
   }
 
   dwGetPocketPendingPayments(pocket) {
-    this.sendMessage({
-      "command": "dw_pending_payments",
-      "id": this.generateTransactionId(),
-      "params": [pocket],
-    });
+    this.sendMessage("dw_pending_payments", [pocket]);
   }
 
   /* Get Backup Seed */
   dwSeed(){
-    this.sendMessage({
-      "command": "dw_seed",
-      "id": this.generateTransactionId(),
-      "params": [],
-    });
+    this.sendMessage("dw_seed", []);
   }
 }

@@ -5573,6 +5573,10 @@ button[disabled].stealth {
     float: none;
 }
 
+.warning a:hover {
+  background-color: red !important;
+}
+
 /* Hackey Shit for when we refactor the old CSS */
 
 /* Always show the sidebar */
